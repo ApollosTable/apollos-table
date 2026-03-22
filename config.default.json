@@ -1,0 +1,41 @@
+{
+  "location": {
+    "city": "Milford",
+    "state": "NH",
+    "latitude": 42.8354,
+    "longitude": -71.6487
+  },
+  "scanner": {
+    "interval_minutes": 15,
+    "max_price": 25,
+    "search_queries": ["free", "moving must go", "curb alert", "free stuff", "garage cleanout"],
+    "keyword_blacklist": ["baby clothes", "broken", "parts only", "needs repair", "for parts"]
+  },
+  "evaluator": {
+    "min_profit": 30,
+    "min_profit_per_mile": 3,
+    "comp_lookback_days": 90,
+    "min_comps": 3
+  },
+  "radius": {
+    "grade_a_miles": 30,
+    "grade_b_miles": 20,
+    "grade_c_miles": 10
+  },
+  "ebay": {
+    "final_value_fee_rate": 0.1305,
+    "payment_processing_rate": 0.0295,
+    "payment_processing_flat": 0.30,
+    "gas_cost_per_mile": 0.67
+  },
+  "alerts": {
+    "desktop": true,
+    "email": false
+  },
+  "shipping_estimates": {
+    "under_10lb": 13,
+    "10_30lb": 27,
+    "30_70lb": 50,
+    "70lb_plus": 75
+  }
+}
