@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apollo's Table — Inventory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#9788;</text></svg>">
+</head>
+<body>
+
+  <!-- Password Gate -->
+  <div id="password-overlay" class="password-overlay">
+    <div class="gate-brand">
+      <h1>Apollo's Table</h1>
+      <p>Deals served on a golden platter</p>
+    </div>
+    <form class="gate-form">
+      <input type="password" class="gate-input" placeholder="Password" autocomplete="off" spellcheck="false">
+      <button type="submit">Enter</button>
+    </form>
+    <div class="gate-error"></div>
+  </div>
+
+  <!-- App Shell -->
+  <div class="app-shell">
+
+    <!-- Navigation -->
+    <nav class="top-nav">
+      <div class="nav-brand">Apollo's Table</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Deals</a></li>
+        <li><a href="inventory.html" class="active">Inventory</a></li>
+        <li><a href="profit.html">Profit</a></li>
+      </ul>
+      <div class="nav-settings">
+        <button id="settings-toggle" title="Settings" aria-label="Settings">&#9881;</button>
+      </div>
+    </nav>
+
+    <!-- Settings Panel -->
+    <aside id="settings-panel" class="settings-panel">
+      <h3>Settings</h3>
+      <div class="settings-group">
+        <label for="new-password">Change Password</label>
+        <form class="settings-pass-form">
+          <input type="password" id="new-password" placeholder="New password" autocomplete="off">
+          <button type="submit" class="btn-save">Update</button>
+          <div class="settings-msg" style="margin-top:0.3rem;font-size:0.8rem;color:var(--green);height:1em;"></div>
+        </form>
+      </div>
+      <div class="settings-group">
+        <button class="btn-logout">Log Out</button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-content">
+
+      <div class="page-header">
+        <h2>Inventory Pipeline</h2>
+        <p>Track items from discovery to sold. Move them through each stage.</p>
+      </div>
+
+      <!-- Kanban Board -->
+      <div class="kanban-board" id="kanban-board">
+        <div class="empty-state" style="grid-column:1/-1">
+          <div class="empty-icon">&#9203;</div>
+          <h3>Loading inventory...</h3>
+        </div>
+      </div>
+
+      <div style="margin-top:1.5rem;padding:1rem;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius);">
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.5rem;">Add items to inventory from the CLI:</p>
+        <code style="display:block;background:var(--bg-input);padding:0.5rem 0.75rem;border-radius:var(--radius-sm);font-family:var(--font-mono);font-size:0.85rem;color:var(--gold);border:1px solid var(--border);">node cli.js grab &lt;deal-id&gt;</code>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
