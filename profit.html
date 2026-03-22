@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apollo's Table — Profit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#9788;</text></svg>">
+</head>
+<body>
+
+  <!-- Password Gate -->
+  <div id="password-overlay" class="password-overlay">
+    <div class="gate-brand">
+      <h1>Apollo's Table</h1>
+      <p>Deals served on a golden platter</p>
+    </div>
+    <form class="gate-form">
+      <input type="password" class="gate-input" placeholder="Password" autocomplete="off" spellcheck="false">
+      <button type="submit">Enter</button>
+    </form>
+    <div class="gate-error"></div>
+  </div>
+
+  <!-- App Shell -->
+  <div class="app-shell">
+
+    <!-- Navigation -->
+    <nav class="top-nav">
+      <div class="nav-brand">Apollo's Table</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Deals</a></li>
+        <li><a href="inventory.html">Inventory</a></li>
+        <li><a href="profit.html" class="active">Profit</a></li>
+      </ul>
+      <div class="nav-settings">
+        <button id="settings-toggle" title="Settings" aria-label="Settings">&#9881;</button>
+      </div>
+    </nav>
+
+    <!-- Settings Panel -->
+    <aside id="settings-panel" class="settings-panel">
+      <h3>Settings</h3>
+      <div class="settings-group">
+        <label for="new-password">Change Password</label>
+        <form class="settings-pass-form">
+          <input type="password" id="new-password" placeholder="New password" autocomplete="off">
+          <button type="submit" class="btn-save">Update</button>
+          <div class="settings-msg" style="margin-top:0.3rem;font-size:0.8rem;color:var(--green);height:1em;"></div>
+        </form>
+      </div>
+      <div class="settings-group">
+        <button class="btn-logout">Log Out</button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-content">
+
+      <div class="page-header">
+        <h2>Profit Tracker</h2>
+        <p>Revenue, costs, and the bottom line. Every flip accounted for.</p>
+      </div>
+
+      <!-- Key Metrics -->
+      <div class="metric-cards">
+        <div class="metric-card">
+          <div class="mc-label">Total Revenue</div>
+          <div class="mc-value gold" id="metric-revenue">$0.00</div>
+        </div>
+        <div class="metric-card">
+          <div class="mc-label">Total Costs</div>
+          <div class="mc-value" id="metric-costs" style="color:var(--text-secondary)">$0.00</div>
+        </div>
+        <div class="metric-card">
+          <div class="mc-label">Net Profit</div>
+          <div class="mc-value positive" id="metric-net">$0.00</div>
+        </div>
+        <div class="metric-card">
+          <div class="mc-label">Avg Profit / Flip</div>
+          <div class="mc-value positive" id="metric-avg-profit">$0.00</div>
+        </div>
+        <div class="metric-card">
+          <div class="mc-label">ROI</div>
+          <div class="mc-value gold" id="metric-roi">0.0%</div>
+        </div>
+        <div class="metric-card">
+          <div class="mc-label">Avg Days to Sell</div>
+          <div class="mc-value" id="metric-avg-days" style="color:var(--text-secondary)">0.0 days</div>
+        </div>
+      </div>
+
+      <!-- Time Toggle -->
+      <div class="time-toggle">
+        <button class="active" data-period="all">All Time</button>
+        <button data-period="month">This Month</button>
+        <button data-period="week">This Week</button>
+      </div>
+
+      <!-- Profit Table -->
+      <div class="profit-table-wrap">
+        <table class="profit-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Cost</th>
+              <th>Sale Price</th>
+              <th>Fees &amp; Ship</th>
+              <th>Net</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="profit-table-body">
+            <tr>
+              <td colspan="6" style="text-align:center;padding:3rem;color:var(--text-muted);font-style:italic;">Loading...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    // Time toggle UI (filters would need date fields in data to fully work)
+    document.addEventListener('DOMContentLoaded', function () {
+      var buttons = document.querySelectorAll('.time-toggle button');
+      buttons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          buttons.forEach(function (b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          // Future: filter table by btn.dataset.period
+        });
+      });
+    });
+  </script>
+</body>
+</html>

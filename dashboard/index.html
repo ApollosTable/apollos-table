@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apollo's Table — Deals</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#9788;</text></svg>">
+</head>
+<body>
+
+  <!-- Password Gate -->
+  <div id="password-overlay" class="password-overlay">
+    <div class="gate-brand">
+      <h1>Apollo's Table</h1>
+      <p>Deals served on a golden platter</p>
+    </div>
+    <form class="gate-form">
+      <input type="password" class="gate-input" placeholder="Password" autocomplete="off" spellcheck="false">
+      <button type="submit">Enter</button>
+    </form>
+    <div class="gate-error"></div>
+  </div>
+
+  <!-- App Shell -->
+  <div class="app-shell">
+
+    <!-- Navigation -->
+    <nav class="top-nav">
+      <div class="nav-brand">Apollo's Table</div>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Deals</a></li>
+        <li><a href="inventory.html">Inventory</a></li>
+        <li><a href="profit.html">Profit</a></li>
+      </ul>
+      <div class="nav-settings">
+        <button id="settings-toggle" title="Settings" aria-label="Settings">&#9881;</button>
+      </div>
+    </nav>
+
+    <!-- Settings Panel -->
+    <aside id="settings-panel" class="settings-panel">
+      <h3>Settings</h3>
+      <div class="settings-group">
+        <label for="new-password">Change Password</label>
+        <form class="settings-pass-form">
+          <input type="password" id="new-password" placeholder="New password" autocomplete="off">
+          <button type="submit" class="btn-save">Update</button>
+          <div class="settings-msg" style="margin-top:0.3rem;font-size:0.8rem;color:var(--green);height:1em;"></div>
+        </form>
+      </div>
+      <div class="settings-group">
+        <button class="btn-logout">Log Out</button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-content">
+
+      <!-- Stats Bar -->
+      <div class="stats-bar">
+        <div class="stat-card">
+          <div class="stat-label">Deals Found</div>
+          <div class="stat-value" id="stat-total">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Grade A</div>
+          <div class="stat-value green" id="stat-grade-a">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Grade B</div>
+          <div class="stat-value gold" id="stat-grade-b">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Potential Profit</div>
+          <div class="stat-value gold" id="stat-profit">$0</div>
+        </div>
+      </div>
+
+      <!-- Refresh Info -->
+      <div class="refresh-info" id="refresh-time">Loading...</div>
+
+      <!-- Filter Bar -->
+      <div class="filter-bar">
+        <div class="filter-group">
+          <label for="filter-grade">Grade</label>
+          <select id="filter-grade">
+            <option value="all">All</option>
+            <option value="A">A Only</option>
+            <option value="B">B Only</option>
+            <option value="C">C Only</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filter-profit">Min Profit</label>
+          <input type="range" id="filter-profit" min="0" max="500" value="0" step="10">
+          <span class="filter-value" id="filter-profit-val">$0</span>
+        </div>
+        <div class="filter-group">
+          <label for="filter-distance">Max Distance</label>
+          <input type="range" id="filter-distance" min="0" max="100" value="100" step="5">
+          <span class="filter-value" id="filter-distance-val">100 mi</span>
+        </div>
+        <div class="filter-spacer"></div>
+        <div class="filter-count" id="filter-count">0 deals</div>
+      </div>
+
+      <!-- Deals Grid -->
+      <div class="deals-grid" id="deals-container">
+        <div class="empty-state" style="grid-column:1/-1">
+          <div class="empty-icon">&#9203;</div>
+          <h3>Loading deals...</h3>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
