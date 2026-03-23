@@ -12,6 +12,8 @@
     "report": "node cli.js report",
     "export": "node cli.js export",
     "server": "node server.js",
+    "dev": "concurrently \"node server.js\" \"cd app && npm run dev\"",
+    "build": "cd app && npm run build",
     "test": "jest --runInBand --forceExit"
   },
   "author": "Blake Corbit",
@@ -28,6 +30,7 @@
     "nodemailer": "^8.0.3"
   },
   "devDependencies": {
+    "concurrently": "^9.2.1",
     "jest": "^30.3.0"
   }
 }
