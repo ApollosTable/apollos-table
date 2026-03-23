@@ -24,7 +24,7 @@ app.use('/api/clients', require('./server/api/clients'));
 const distPath = path.join(__dirname, 'app', 'dist');
 if (fs.existsSync(distPath)) {
   app.use(express.static(distPath));
-  app.get('*', (req, res, next) => {
+  app.get('{*splat}', (req, res, next) => {
     if (req.path.startsWith('/api')) return next();
     res.sendFile(path.join(distPath, 'index.html'));
   });

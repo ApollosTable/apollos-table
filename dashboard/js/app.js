@@ -6,7 +6,7 @@
   'use strict';
 
   var PASS_KEY = 'apollo_gate';
-  var DEFAULT_HASH = '3293409';
+  var DEFAULT_HASH = '1411091249';
   var DATA_PATH = 'data/businesses.json';
 
   function simpleHash(str) {

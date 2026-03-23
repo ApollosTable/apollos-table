@@ -7,6 +7,7 @@
     "apollo": "./cli.js"
   },
   "scripts": {
+    "start": "node server.js",
     "scan": "node cli.js scan",
     "discover": "node cli.js discover",
     "report": "node cli.js report",
