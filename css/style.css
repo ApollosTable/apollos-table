@@ -928,11 +928,34 @@ img {
 }
 
 /* ---------- Refresh info ---------- */
+.refresh-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
 .refresh-info {
   font-size: 0.75rem;
   color: var(--text-muted);
-  text-align: right;
-  margin-bottom: 0.75rem;
+}
+.btn-refresh {
+  padding: 0.4rem 1rem;
+  background: var(--bg-card);
+  color: var(--gold);
+  border: 1px solid var(--gold-dim);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-refresh:hover {
+  background: var(--gold-glow);
+  border-color: var(--gold);
+}
+.btn-refresh:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* ---------- Responsive ---------- */

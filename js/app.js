@@ -235,6 +235,7 @@
 
   function initPrefsPanel() {
     var zip = document.getElementById('pref-zip');
+    var radius = document.getElementById('pref-radius');
     var invest = document.getElementById('pref-invest');
     var profit = document.getElementById('pref-profit');
     var grade = document.getElementById('pref-grade');
@@ -242,16 +243,19 @@
 
     var p = loadPrefs();
     if (zip && p.zip) zip.value = p.zip;
+    if (radius) { radius.value = p.radius != null ? p.radius : 30; setText('pref-radius-val', (p.radius != null ? p.radius : 30) + ' mi'); }
     if (invest) { invest.value = p.invest != null ? p.invest : 50; setText('pref-invest-val', currency(p.invest != null ? p.invest : 50)); }
     if (profit) { profit.value = p.profit != null ? p.profit : 25; setText('pref-profit-val', currency(p.profit != null ? p.profit : 25)); }
     if (grade && p.grade) grade.value = p.grade;
     if (shippable && p.shippable) shippable.checked = true;
 
     function syncAndFilter() {
+      if (radius) setText('pref-radius-val', radius.value + ' mi');
       if (invest) setText('pref-invest-val', currency(Number(invest.value)));
       if (profit) setText('pref-profit-val', currency(Number(profit.value)));
       var prefs = {
         zip: zip ? zip.value.trim() : '',
+        radius: radius ? Number(radius.value) : 30,
         invest: invest ? Number(invest.value) : 200,
         profit: profit ? Number(profit.value) : 0,
         grade: grade ? grade.value : 'all',
@@ -261,11 +265,41 @@
       if (window._apolloRefilter) window._apolloRefilter();
     }
 
+    if (radius) radius.addEventListener('input', syncAndFilter);
     if (invest) invest.addEventListener('input', syncAndFilter);
     if (profit) profit.addEventListener('input', syncAndFilter);
     if (grade) grade.addEventListener('change', syncAndFilter);
     if (shippable) shippable.addEventListener('change', syncAndFilter);
     if (zip) zip.addEventListener('change', syncAndFilter);
+  }
+
+  function initRefreshButton() {
+    var btn = document.getElementById('btn-refresh');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      btn.disabled = true;
+      btn.textContent = 'Refreshing...';
+      // Force reload data from server (bust cache)
+      fetch('data/data.json?t=' + Date.now())
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (data && data.deals) {
+            renderStats(data.stats);
+            renderRefreshTime(data.generated_at);
+            var deals = data.deals.slice().sort(function (a, b) {
+              return (b.estimated_profit || 0) - (a.estimated_profit || 0);
+            });
+            var container = document.getElementById('deals-container');
+            if (container) initFilters(deals, container);
+          }
+          btn.disabled = false;
+          btn.textContent = 'Refresh Deals';
+        })
+        .catch(function () {
+          btn.disabled = false;
+          btn.textContent = 'Refresh Deals';
+        });
+    });
   }
 
   function initFilters(allDeals, container) {
@@ -277,22 +311,21 @@
       var minGrade = p.grade || 'all';
       var minProfit = p.profit != null ? p.profit : 0;
       var maxInvest = p.invest != null ? p.invest : 200;
+      var maxRadius = p.radius != null ? p.radius : 60;
       var shippableOnly = p.shippable || false;
 
       var gradeOrder = ['A', 'B', 'C', 'F'];
 
       var filtered = allDeals.filter(function (d) {
-        // Grade filter: A = only A, B = A+B, C = A+B+C
         if (minGrade !== 'all') {
           var dealIdx = gradeOrder.indexOf((d.grade || 'F').toUpperCase());
           var minIdx = gradeOrder.indexOf(minGrade.toUpperCase());
           if (dealIdx > minIdx) return false;
         }
-        // Profit: only show deals worth at least this much
         if ((d.estimated_profit || 0) < minProfit) return false;
-        // Investment: hide deals that cost more than you'll spend
         if ((d.price || 0) > maxInvest) return false;
-        // Shippable: only eBay channel
+        // Distance filter (when data available)
+        if (d.distance_miles != null && d.distance_miles > maxRadius) return false;
         if (shippableOnly && (d.sell_channel || '').toLowerCase() !== 'ebay') return false;
         return true;
       });
@@ -302,6 +335,7 @@
         if (minGrade !== 'all') tags.push('Grade ' + minGrade + '+');
         if (maxInvest < 200) tags.push('Spend up to ' + currency(maxInvest));
         if (minProfit > 0) tags.push(currency(minProfit) + '+ profit');
+        if (maxRadius < 60) tags.push(maxRadius + ' mi radius');
         if (shippableOnly) tags.push('Shippable');
         if (p.zip) tags.push(p.zip);
         if (tags.length === 0) tags.push('All deals');
@@ -552,6 +586,7 @@
     initGate();
     initSettings();
     initPrefsPanel();
+    initRefreshButton();
     initDealsPage();
     initInventoryPage();
     initProfitPage();

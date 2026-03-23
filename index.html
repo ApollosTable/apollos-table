@@ -50,6 +50,14 @@
         <span class="pref-hint">Deals are scanned from Denver metro area</span>
       </div>
       <div class="settings-group">
+        <label for="pref-radius">Max Pickup Distance</label>
+        <div class="pref-slider-row">
+          <input type="range" id="pref-radius" min="5" max="60" value="30" step="5">
+          <span id="pref-radius-val" class="pref-val">30 mi</span>
+        </div>
+        <span class="pref-hint">How far you'll drive to grab a deal</span>
+      </div>
+      <div class="settings-group">
         <label for="pref-invest">Max I'll Spend (Ask Price)</label>
         <div class="pref-slider-row">
           <input type="range" id="pref-invest" min="0" max="200" value="50" step="5">
@@ -117,7 +125,10 @@
       </div>
 
       <!-- Refresh Info -->
-      <div class="refresh-info" id="refresh-time">Loading...</div>
+      <div class="refresh-row">
+        <div class="refresh-info" id="refresh-time">Loading...</div>
+        <button id="btn-refresh" class="btn-refresh" title="Rescan for new deals">Refresh Deals</button>
+      </div>
 
       <!-- Active Filters Summary -->
       <div class="filter-bar">
