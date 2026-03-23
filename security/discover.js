@@ -78,9 +78,27 @@ async function searchYellowPages(category, location) {
 }
 
 // Discover businesses for all configured categories
-async function discoverAll() {
-  const location = `${config.location.city}, ${config.location.state} ${config.location.zip}`;
-  const categories = config.categories;
+// If regionId is provided, use that region's first city + state for location and its categories.
+// Otherwise fall back to config.location and config.categories.
+async function discoverAll(regionId) {
+  let location;
+  let categories;
+  let defaultCity = config.location.city;
+
+  if (regionId) {
+    const region = db.getRegion(regionId);
+    if (!region) throw new Error(`Region ${regionId} not found`);
+    const cities = JSON.parse(region.cities || '[]');
+    const city = cities[0] || config.location.city;
+    const state = region.state || config.location.state;
+    location = `${city}, ${state}`;
+    defaultCity = city;
+    categories = region.categories ? JSON.parse(region.categories) : config.categories;
+  } else {
+    location = `${config.location.city}, ${config.location.state} ${config.location.zip}`;
+    categories = config.categories;
+  }
+
   let totalFound = 0;
   let totalAdded = 0;
 
@@ -90,14 +108,9 @@ async function discoverAll() {
     for (const biz of businesses) {
       if (!biz.website) continue;
 
-      // Check if URL already exists
-      const existing = db.listBusinesses().find(b => {
-        const existingHost = safeHostname(b.url);
-        const newHost = safeHostname(biz.website);
-        return existingHost && newHost && existingHost === newHost;
-      });
-
-      if (existing) continue;
+      // O(1) domain dedup via indexed lookup
+      const domain = safeHostname(biz.website);
+      if (!domain || db.businessExistsByDomain(domain)) continue;
 
       try {
         const { id, slug } = db.addBusiness({
@@ -105,9 +118,10 @@ async function discoverAll() {
           url: biz.website,
           category: biz.category,
           address: biz.address,
-          city: biz.city || config.location.city,
+          city: biz.city || defaultCity,
           phone: biz.phone,
           source: 'yellowpages',
+          region_id: regionId || null,
         });
         totalAdded++;
         console.log(`  + ${biz.name} (${biz.website})`);
