@@ -391,58 +391,6 @@ img {
   overflow: hidden;
   transition: border-color var(--transition), transform var(--transition);
   cursor: default;
-  position: relative;
-}
-.deal-dismiss {
-  position: absolute;
-  top: 0.4rem;
-  right: 0.4rem;
-  width: 28px;
-  height: 28px;
-  background: rgba(0,0,0,0.7);
-  color: #aaa;
-  border: none;
-  border-radius: 50%;
-  font-size: 1.1rem;
-  line-height: 1;
-  cursor: pointer;
-  z-index: 2;
-  opacity: 0;
-  transition: opacity 0.15s;
-}
-.deal-card:hover .deal-dismiss {
-  opacity: 1;
-}
-.deal-dismiss:hover {
-  background: rgba(200,50,50,0.8);
-  color: #fff;
-}
-.dismissed-bar {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem 0.8rem;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-subtle);
-  border-radius: 6px;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-}
-.btn-undismiss,
-.btn-undismiss-small {
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--gold-dim);
-  padding: 0.3rem 0.7rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  cursor: pointer;
-}
-.btn-undismiss:hover,
-.btn-undismiss-small:hover {
-  border-color: var(--gold);
-  color: var(--gold);
 }
 
 .deal-card:hover {
@@ -980,34 +928,11 @@ img {
 }
 
 /* ---------- Refresh info ---------- */
-.refresh-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.75rem;
-}
 .refresh-info {
   font-size: 0.75rem;
   color: var(--text-muted);
-}
-.btn-refresh {
-  padding: 0.4rem 1rem;
-  background: var(--bg-card);
-  color: var(--gold);
-  border: 1px solid var(--gold-dim);
-  border-radius: 6px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.btn-refresh:hover {
-  background: var(--gold-glow);
-  border-color: var(--gold);
-}
-.btn-refresh:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  text-align: right;
+  margin-bottom: 0.75rem;
 }
 
 /* ---------- Responsive ---------- */
@@ -1137,87 +1062,3 @@ img {
 .text-red { color: var(--red); }
 .text-muted { color: var(--text-muted); }
 .mono { font-family: var(--font-mono); }
-
-/* Channel badges */
-.channel-badge {
-  display: inline-block;
-  padding: 0.15rem 0.5rem;
-  border-radius: 3px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-.channel-badge.ebay {
-  background: rgba(62, 207, 110, 0.15);
-  color: var(--green);
-  border: 1px solid rgba(62, 207, 110, 0.3);
-}
-.channel-badge.local {
-  background: rgba(212, 164, 76, 0.12);
-  color: var(--gold-dim);
-  border: 1px solid rgba(212, 164, 76, 0.25);
-}
-
-/* Checkbox styling */
-.settings-group label input[type="checkbox"],
-.filter-group label input[type="checkbox"] {
-  margin-right: 0.4rem;
-  accent-color: var(--gold);
-}
-.settings-group label,
-.filter-group label {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-}
-
-/* Prefs hint text */
-.pref-hint {
-  display: block;
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  margin-top: 0.2rem;
-}
-
-/* Prefs slider row */
-.pref-slider-row {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-.pref-slider-row input[type="range"] {
-  flex: 1;
-}
-.pref-val {
-  min-width: 3.5rem;
-  text-align: right;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  color: var(--gold);
-}
-
-/* Settings divider */
-.settings-divider {
-  border: none;
-  border-top: 1px solid var(--border);
-  margin: 1rem 0;
-}
-
-/* Filter tags */
-.filter-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
-.filter-tag {
-  display: inline-block;
-  padding: 0.2rem 0.6rem;
-  background: var(--gold-glow);
-  color: var(--gold);
-  border: 1px solid rgba(212, 164, 76, 0.3);
-  border-radius: 99px;
-  font-size: 0.75rem;
-  font-weight: 500;
-}

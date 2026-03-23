@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Apollo's Table — Deals</title>
+  <title>Apollo's Table — Security Pipeline</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#9788;</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128737;</text></svg>">
 </head>
 <body>
 
@@ -16,7 +16,7 @@
   <div id="password-overlay" class="password-overlay">
     <div class="gate-brand">
       <h1>Apollo's Table</h1>
-      <p>Deals served on a golden platter</p>
+      <p>Security Scanner Pipeline</p>
     </div>
     <form class="gate-form">
       <input type="password" class="gate-input" placeholder="Password" autocomplete="off" spellcheck="false">
@@ -27,67 +27,18 @@
 
   <!-- App Shell -->
   <div class="app-shell">
-
-    <!-- Navigation -->
     <nav class="top-nav">
       <div class="nav-brand">Apollo's Table</div>
       <ul class="nav-links">
-        <li><a href="index.html" class="active">Deals</a></li>
-        <li><a href="inventory.html">Inventory</a></li>
-        <li><a href="profit.html">Profit</a></li>
+        <li><a href="index.html" class="active">Pipeline</a></li>
       </ul>
       <div class="nav-settings">
         <button id="settings-toggle" title="Settings" aria-label="Settings">&#9881;</button>
       </div>
     </nav>
 
-    <!-- Settings Panel -->
     <aside id="settings-panel" class="settings-panel">
-      <h3>Your Preferences</h3>
-      <div class="settings-group">
-        <label for="pref-zip">Your Zip Code</label>
-        <input type="text" id="pref-zip" placeholder="80204" maxlength="5" autocomplete="postal-code">
-        <span class="pref-hint">Deals are scanned from Denver metro area</span>
-      </div>
-      <div class="settings-group">
-        <label for="pref-radius">Max Pickup Distance</label>
-        <div class="pref-slider-row">
-          <input type="range" id="pref-radius" min="5" max="60" value="30" step="5">
-          <span id="pref-radius-val" class="pref-val">30 mi</span>
-        </div>
-        <span class="pref-hint">How far you'll drive to grab a deal</span>
-      </div>
-      <div class="settings-group">
-        <label for="pref-invest">Max I'll Spend (Ask Price)</label>
-        <div class="pref-slider-row">
-          <input type="range" id="pref-invest" min="0" max="200" value="50" step="5">
-          <span id="pref-invest-val" class="pref-val">$50</span>
-        </div>
-        <span class="pref-hint">Hide deals that cost more than this to buy</span>
-      </div>
-      <div class="settings-group">
-        <label for="pref-profit">Min Profit to Show</label>
-        <div class="pref-slider-row">
-          <input type="range" id="pref-profit" min="0" max="500" value="25" step="5">
-          <span id="pref-profit-val" class="pref-val">$25</span>
-        </div>
-        <span class="pref-hint">Only show deals worth at least this much</span>
-      </div>
-      <div class="settings-group">
-        <label for="pref-grade">Deal Quality</label>
-        <select id="pref-grade">
-          <option value="all">All Grades</option>
-          <option value="A">A Only (best)</option>
-          <option value="B">A + B</option>
-          <option value="C">A + B + C</option>
-        </select>
-      </div>
-      <div class="settings-group">
-        <label><input type="checkbox" id="pref-shippable"> eBay Shippable Only</label>
-        <span class="pref-hint">Hide bulky items (hot tubs, trailers, etc.)</span>
-      </div>
-      <hr class="settings-divider">
-      <h3>Account</h3>
+      <h3>Settings</h3>
       <div class="settings-group">
         <label for="new-password">Change Password</label>
         <form class="settings-pass-form">
@@ -101,50 +52,76 @@
       </div>
     </aside>
 
-    <!-- Main -->
     <main class="main-content">
-
       <!-- Stats Bar -->
       <div class="stats-bar">
         <div class="stat-card">
-          <div class="stat-label">Deals Found</div>
+          <div class="stat-label">Discovered</div>
           <div class="stat-value" id="stat-total">0</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Grade A</div>
-          <div class="stat-value green" id="stat-grade-a">0</div>
+          <div class="stat-label">Scanned</div>
+          <div class="stat-value gold" id="stat-scanned">0</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Grade B</div>
-          <div class="stat-value gold" id="stat-grade-b">0</div>
+          <div class="stat-label">Reports Ready</div>
+          <div class="stat-value green" id="stat-reported">0</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Potential Profit</div>
-          <div class="stat-value gold" id="stat-profit">$0</div>
+          <div class="stat-label">Outreach Sent</div>
+          <div class="stat-value" id="stat-outreach">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Responses</div>
+          <div class="stat-value green" id="stat-responses">0</div>
         </div>
       </div>
 
-      <!-- Refresh Info -->
-      <div class="refresh-row">
-        <div class="refresh-info" id="refresh-time">Loading...</div>
-        <button id="btn-refresh" class="btn-refresh" title="Rescan for new deals">Refresh Deals</button>
-      </div>
+      <!-- Grade Breakdown -->
+      <div class="grade-bar" id="grade-bar"></div>
 
-      <!-- Active Filters Summary -->
+      <!-- Filter Bar -->
       <div class="filter-bar">
-        <div class="filter-tags" id="filter-tags"></div>
+        <div class="filter-group">
+          <label for="filter-stage">Stage</label>
+          <select id="filter-stage">
+            <option value="all">All</option>
+            <option value="discovered">Discovered</option>
+            <option value="scanned">Scanned</option>
+            <option value="report_draft">Report Draft</option>
+            <option value="report_ready">Report Ready</option>
+            <option value="outreach_sent">Outreach Sent</option>
+            <option value="responded">Responded</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filter-grade">Grade</label>
+          <select id="filter-grade">
+            <option value="all">All</option>
+            <option value="F">F</option>
+            <option value="D">D</option>
+            <option value="C">C</option>
+            <option value="B">B</option>
+            <option value="A">A</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filter-category">Category</label>
+          <select id="filter-category">
+            <option value="all">All</option>
+          </select>
+        </div>
         <div class="filter-spacer"></div>
-        <div class="filter-count" id="filter-count">0 deals</div>
+        <div class="filter-count" id="filter-count">0 businesses</div>
       </div>
 
-      <!-- Deals Grid -->
-      <div class="deals-grid" id="deals-container">
+      <!-- Business Cards -->
+      <div class="deals-grid" id="business-container">
         <div class="empty-state" style="grid-column:1/-1">
           <div class="empty-icon">&#9203;</div>
-          <h3>Loading deals...</h3>
+          <h3>Loading...</h3>
         </div>
       </div>
-
     </main>
   </div>
 
