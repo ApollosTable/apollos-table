@@ -1,1 +1,176 @@
-{}
+{
+  "generated_at": "2026-03-23T19:21:52.432Z",
+  "stats": {
+    "total": 10,
+    "scanned": 10,
+    "reported": 10,
+    "outreachSent": 0,
+    "responses": 0,
+    "grades": [
+      {
+        "grade": "C",
+        "count": 2
+      },
+      {
+        "grade": "D",
+        "count": 4
+      },
+      {
+        "grade": "F",
+        "count": 4
+      }
+    ]
+  },
+  "businesses": [
+    {
+      "id": 3,
+      "name": "JL Heating & Cooling",
+      "slug": "jl-heating-cooling",
+      "url": "https://jlheatingandcooling.com",
+      "category": "hvac",
+      "city": "Amherst",
+      "phone": null,
+      "score": 48,
+      "grade": "D",
+      "last_scanned": "2026-03-23 19:20:11",
+      "pipeline_stage": "report_ready",
+      "outreach_status": null,
+      "has_report": true
+    },
+    {
+      "id": 4,
+      "name": "Brightside Landscaping",
+      "slug": "brightside-landscaping",
+      "url": "https://brightsidelandscapingnh.com",
+      "category": "landscaping",
+      "city": "Milford",
+      "phone": null,
+      "score": 0,
+      "grade": "F",
+      "last_scanned": "2026-03-23 19:20:11",
+      "pipeline_stage": "report_ready",
+      "outreach_status": null,
+      "has_report": true
+    },
+    {
+      "id": 1,
+      "name": "Granite State Plumbing & Heating",
+      "slug": "granite-state-plumbing-heating",
+      "url": "https://granitestateph.com",
+      "category": "plumber",
+      "city": "Milford",
+      "phone": null,
+      "score": 0,
+      "grade": "F",
+      "last_scanned": "2026-03-23 19:20:10",
+      "pipeline_stage": "report_ready",
+      "outreach_status": null,
+      "has_report": true
+    },
+    {
+      "id": 2,
+      "name": "Souhegan Valley Electric",
+      "slug": "souhegan-valley-electric",
+      "url": "https://svelectric.com",
+      "category": "electrician",
+      "city": "Milford",
+      "phone": null,
+      "score": 40,
+      "grade": "D",
+      "last_scanned": "2026-03-23 19:20:10",
+      "pipeline_stage": "report_ready",
+      "outreach_status": null,
+      "has_report": true
+    },
+    {
+      "id": 5,
+      "name": "Keyes Roofing",
+      "slug": "keyes-roofing",
+      "url": "https://keyesroofing.com",
+      "category": "roofing",
+      "city": "Milford",
+      "phone": null,
+      "score": 53,
+      "grade": "D",
+      "last_scanned": "2026-03-23 19:20:10",
+      "pipeline_stage": "report_ready",
+      "outreach_status": null,
+      "has_report": true
+    },
+    {
+      "id": 10,
+      "name": "NH Tree Service",
+      "slug": "nh-tree-service",
+      "url": "https://nhtreeservices.com",
+      "category": "tree service",
+      "city": "Nashua",
+      "phone": null,
+      "score": 63,
+      "grade": "C",
+      "last_scanned": "2026-03-23 19:20:09",
+      "pipeline_stage": "report_ready",
+      "outreach_status": null,
+      "has_report": true
+    },
+    {
+      "id": 9,
+      "name": "Eastern Excavation",
+      "slug": "eastern-excavation",
+      "url": "https://easternexcavation.com",
+      "category": "excavation",
+      "city": "Amherst",
+      "phone": null,
+      "score": 24,
+      "grade": "F",
+      "last_scanned": "2026-03-23 19:20:08",
+      "pipeline_stage": "report_ready",
+      "outreach_status": null,
+      "has_report": true
+    },
+    {
+      "id": 6,
+      "name": "Nashua Wallpaper & Paint",
+      "slug": "nashua-wallpaper-paint",
+      "url": "https://nashuawallpaper.com",
+      "category": "painting",
+      "city": "Nashua",
+      "phone": null,
+      "score": 73,
+      "grade": "C",
+      "last_scanned": "2026-03-23 19:20:07",
+      "pipeline_stage": "report_ready",
+      "outreach_status": null,
+      "has_report": true
+    },
+    {
+      "id": 7,
+      "name": "Fullers Auto",
+      "slug": "fullers-auto",
+      "url": "https://fullersauto.com",
+      "category": "auto repair",
+      "city": "Milford",
+      "phone": null,
+      "score": 40,
+      "grade": "D",
+      "last_scanned": "2026-03-23 19:20:06",
+      "pipeline_stage": "report_ready",
+      "outreach_status": null,
+      "has_report": true
+    },
+    {
+      "id": 8,
+      "name": "Boynton Fencing",
+      "slug": "boynton-fencing",
+      "url": "https://boyntonfencing.com",
+      "category": "fencing",
+      "city": "Milford",
+      "phone": null,
+      "score": 0,
+      "grade": "F",
+      "last_scanned": "2026-03-23 19:20:06",
+      "pipeline_stage": "report_ready",
+      "outreach_status": null,
+      "has_report": true
+    }
+  ]
+}

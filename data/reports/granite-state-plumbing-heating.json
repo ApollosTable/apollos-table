@@ -1,0 +1,32 @@
+{
+  "business": {
+    "name": "Granite State Plumbing & Heating",
+    "slug": "granite-state-plumbing-heating",
+    "url": "https://granitestateph.com",
+    "category": "plumber",
+    "city": "Milford"
+  },
+  "scan": {
+    "score": 0,
+    "grade": "F",
+    "findings": [
+      {
+        "id": "unreachable",
+        "severity": "critical",
+        "points": 100,
+        "title": "Website unreachable",
+        "detail": "Could not connect to the website at all. It may be down or the URL may be incorrect."
+      }
+    ],
+    "scanned_at": "2026-03-23 19:20:10"
+  },
+  "narrative": "**Website Security Report for Granite State Plumbing & Heating**\n\nI have some concerning news about your website. When I tried to visit granitestateph.com, it wouldn't load at all. This means your website is completely unreachable right now.\n\nThis is a serious problem for your business. When potential customers search for plumbers in Milford and find your business listing, they can't actually visit your website to learn about your services, see your contact information, or request appointments. You're essentially invisible online, which means you're losing customers every day to competitors whose websites work properly.\n\nGoogle also penalizes websites that don't work, so even your search rankings will suffer. People might think your business has closed down if they can't reach your website.\n\nThere are a few possible causes: your web hosting service might have expired, there could be a technical problem with your hosting company, or there might be an issue with your domain name registration. Your web developer or hosting company needs to investigate this immediately.\n\nGetting your website back online and properly secured would restore your online presence, help customers find and contact you easily, and protect your business reputation.",
+  "contact": {
+    "name": "Blake Corbit",
+    "title": "Website Security Consultant",
+    "email": "blake.a.corbit@gmail.com",
+    "phone": "603-732-3032",
+    "website": "apollostable.com"
+  },
+  "generated_at": "2026-03-23 19:21:25"
+}

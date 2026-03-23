@@ -1,0 +1,74 @@
+{
+  "business": {
+    "name": "Keyes Roofing",
+    "slug": "keyes-roofing",
+    "url": "https://keyesroofing.com",
+    "category": "roofing",
+    "city": "Milford"
+  },
+  "scan": {
+    "score": 53,
+    "grade": "D",
+    "findings": [
+      {
+        "id": "no-https-redirect",
+        "severity": "medium",
+        "points": 10,
+        "title": "No automatic HTTPS redirect",
+        "detail": "Visiting the site via http:// does not redirect to the secure https:// version. This means some visitors are using an unencrypted connection without knowing it."
+      },
+      {
+        "id": "no-hsts",
+        "severity": "medium",
+        "points": 10,
+        "title": "No HSTS header",
+        "detail": "The site doesn't tell browsers to always use HTTPS. An attacker on the same network (like public WiFi) could intercept the connection before encryption kicks in."
+      },
+      {
+        "id": "no-xfo",
+        "severity": "medium",
+        "points": 8,
+        "title": "No clickjacking protection",
+        "detail": "The site can be embedded in an iframe on a malicious page. An attacker could trick visitors into clicking buttons they can't see (clickjacking)."
+      },
+      {
+        "id": "no-csp",
+        "severity": "medium",
+        "points": 8,
+        "title": "No Content Security Policy",
+        "detail": "Without a CSP, the browser allows scripts from anywhere to run on the page. If an attacker injects malicious code, nothing stops it from executing."
+      },
+      {
+        "id": "no-xcto",
+        "severity": "low",
+        "points": 5,
+        "title": "Missing X-Content-Type-Options header",
+        "detail": "Without this header, browsers might misinterpret files, which can lead to security vulnerabilities."
+      },
+      {
+        "id": "no-referrer-policy",
+        "severity": "low",
+        "points": 3,
+        "title": "No Referrer Policy",
+        "detail": "The site may leak the full URL (including sensitive query parameters) to other sites when visitors click links."
+      },
+      {
+        "id": "no-permissions-policy",
+        "severity": "low",
+        "points": 3,
+        "title": "No Permissions Policy",
+        "detail": "The site hasn't restricted access to browser features like camera, microphone, or geolocation. Third-party scripts could request these without your knowledge."
+      }
+    ],
+    "scanned_at": "2026-03-23 19:20:10"
+  },
+  "narrative": "**Website Security Report for Keyes Roofing**\n\nYour website scored 53 out of 100 for security, which puts you at risk in several important ways.\n\nThe biggest concern is that visitors can accidentally connect to your site without encryption. When someone types your web address without the \"s\" in \"https,\" they get an unsecured connection that hackers can intercept. This is especially dangerous when customers fill out contact forms with their personal information.\n\nYour site is also vulnerable to \"clickjacking\" attacks, where criminals can trick visitors into clicking hidden buttons by displaying your website inside their malicious pages. Without proper security headers (the instructions your website gives to browsers), there's little protection against these tricks.\n\nThese security gaps hurt more than just safety. Google's search algorithm favors secure websites, so these issues likely hurt your search rankings. Potential customers researching roofers in Milford might never find you because less secure sites rank lower.\n\nThe good news? These are all standard fixes that most web developers can implement quickly and affordably.\n\nAddressing these security issues would protect your customers' information, improve your Google search rankings, and give visitors confidence when requesting quotes through your website.",
+  "contact": {
+    "name": "Blake Corbit",
+    "title": "Website Security Consultant",
+    "email": "blake.a.corbit@gmail.com",
+    "phone": "603-732-3032",
+    "website": "apollostable.com"
+  },
+  "generated_at": "2026-03-23 19:21:15"
+}

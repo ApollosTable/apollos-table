@@ -1,0 +1,88 @@
+{
+  "business": {
+    "name": "Souhegan Valley Electric",
+    "slug": "souhegan-valley-electric",
+    "url": "https://svelectric.com",
+    "category": "electrician",
+    "city": "Milford"
+  },
+  "scan": {
+    "score": 40,
+    "grade": "D",
+    "findings": [
+      {
+        "id": "no-hsts",
+        "severity": "medium",
+        "points": 10,
+        "title": "No HSTS header",
+        "detail": "The site doesn't tell browsers to always use HTTPS. An attacker on the same network (like public WiFi) could intercept the connection before encryption kicks in."
+      },
+      {
+        "id": "no-xfo",
+        "severity": "medium",
+        "points": 8,
+        "title": "No clickjacking protection",
+        "detail": "The site can be embedded in an iframe on a malicious page. An attacker could trick visitors into clicking buttons they can't see (clickjacking)."
+      },
+      {
+        "id": "no-csp",
+        "severity": "medium",
+        "points": 8,
+        "title": "No Content Security Policy",
+        "detail": "Without a CSP, the browser allows scripts from anywhere to run on the page. If an attacker injects malicious code, nothing stops it from executing."
+      },
+      {
+        "id": "powered-by",
+        "severity": "medium",
+        "points": 8,
+        "title": "Technology stack exposed",
+        "detail": "The \"X-Powered-By: ASP.NET\" header reveals the backend technology. Attackers use this to narrow down which vulnerabilities to try."
+      },
+      {
+        "id": "admin-exposed-wploginphp",
+        "severity": "medium",
+        "points": 10,
+        "title": "WordPress login page publicly accessible",
+        "detail": "The page at /wp-login.php is reachable by anyone. Attackers use automated tools to try common passwords against login pages like this around the clock."
+      },
+      {
+        "id": "no-xcto",
+        "severity": "low",
+        "points": 5,
+        "title": "Missing X-Content-Type-Options header",
+        "detail": "Without this header, browsers might misinterpret files, which can lead to security vulnerabilities."
+      },
+      {
+        "id": "no-referrer-policy",
+        "severity": "low",
+        "points": 3,
+        "title": "No Referrer Policy",
+        "detail": "The site may leak the full URL (including sensitive query parameters) to other sites when visitors click links."
+      },
+      {
+        "id": "no-permissions-policy",
+        "severity": "low",
+        "points": 3,
+        "title": "No Permissions Policy",
+        "detail": "The site hasn't restricted access to browser features like camera, microphone, or geolocation. Third-party scripts could request these without your knowledge."
+      },
+      {
+        "id": "cookie-flags",
+        "severity": "low",
+        "points": 5,
+        "title": "Cookies missing security flags",
+        "detail": "Cookies are set without: Secure flag, HttpOnly flag, SameSite attribute. This makes them easier to steal or misuse in cross-site attacks."
+      }
+    ],
+    "scanned_at": "2026-03-23 19:20:10"
+  },
+  "narrative": "**Security Report for Souhegan Valley Electric**\n\nYour website has some security gaps that could hurt your business. The good news? None of these are disasters, but they're worth fixing.\n\nThe biggest concern is that your WordPress login page is wide open to the internet. Hackers run automated programs that constantly try to guess passwords on these pages. If they get in, they could deface your site or steal customer information.\n\nYour site also lacks basic protections that modern browsers expect. Without these safeguards, visitors on public WiFi could have their connection intercepted, and malicious websites could potentially trick customers into clicking things they didn't intend to click.\n\nThese security issues might be hurting you in ways you don't see. Google considers website security when ranking search results, so fixing these problems could help more customers find you online. Plus, customers increasingly notice when sites feel \"unsafe\" – even if they can't put their finger on why.\n\nThe technical details reveal information about your website's setup that makes it easier for attackers to target you specifically.\n\nAddressing these security gaps would protect your customers' information, potentially improve your Google rankings, and give visitors more confidence in your business.",
+  "contact": {
+    "name": "Blake Corbit",
+    "title": "Website Security Consultant",
+    "email": "blake.a.corbit@gmail.com",
+    "phone": "603-732-3032",
+    "website": "apollostable.com"
+  },
+  "generated_at": "2026-03-23 19:21:33"
+}

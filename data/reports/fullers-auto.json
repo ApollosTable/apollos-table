@@ -1,0 +1,88 @@
+{
+  "business": {
+    "name": "Fullers Auto",
+    "slug": "fullers-auto",
+    "url": "https://fullersauto.com",
+    "category": "auto repair",
+    "city": "Milford"
+  },
+  "scan": {
+    "score": 40,
+    "grade": "D",
+    "findings": [
+      {
+        "id": "no-hsts",
+        "severity": "medium",
+        "points": 10,
+        "title": "No HSTS header",
+        "detail": "The site doesn't tell browsers to always use HTTPS. An attacker on the same network (like public WiFi) could intercept the connection before encryption kicks in."
+      },
+      {
+        "id": "no-xfo",
+        "severity": "medium",
+        "points": 8,
+        "title": "No clickjacking protection",
+        "detail": "The site can be embedded in an iframe on a malicious page. An attacker could trick visitors into clicking buttons they can't see (clickjacking)."
+      },
+      {
+        "id": "no-csp",
+        "severity": "medium",
+        "points": 8,
+        "title": "No Content Security Policy",
+        "detail": "Without a CSP, the browser allows scripts from anywhere to run on the page. If an attacker injects malicious code, nothing stops it from executing."
+      },
+      {
+        "id": "powered-by",
+        "severity": "medium",
+        "points": 8,
+        "title": "Technology stack exposed",
+        "detail": "The \"X-Powered-By: ASP.NET\" header reveals the backend technology. Attackers use this to narrow down which vulnerabilities to try."
+      },
+      {
+        "id": "admin-exposed-wploginphp",
+        "severity": "medium",
+        "points": 10,
+        "title": "WordPress login page publicly accessible",
+        "detail": "The page at /wp-login.php is reachable by anyone. Attackers use automated tools to try common passwords against login pages like this around the clock."
+      },
+      {
+        "id": "no-xcto",
+        "severity": "low",
+        "points": 5,
+        "title": "Missing X-Content-Type-Options header",
+        "detail": "Without this header, browsers might misinterpret files, which can lead to security vulnerabilities."
+      },
+      {
+        "id": "no-referrer-policy",
+        "severity": "low",
+        "points": 3,
+        "title": "No Referrer Policy",
+        "detail": "The site may leak the full URL (including sensitive query parameters) to other sites when visitors click links."
+      },
+      {
+        "id": "no-permissions-policy",
+        "severity": "low",
+        "points": 3,
+        "title": "No Permissions Policy",
+        "detail": "The site hasn't restricted access to browser features like camera, microphone, or geolocation. Third-party scripts could request these without your knowledge."
+      },
+      {
+        "id": "cookie-flags",
+        "severity": "low",
+        "points": 5,
+        "title": "Cookies missing security flags",
+        "detail": "Cookies are set without: Secure flag, HttpOnly flag, SameSite attribute. This makes them easier to steal or misuse in cross-site attacks."
+      }
+    ],
+    "scanned_at": "2026-03-23 19:20:06"
+  },
+  "narrative": "**Website Security Report for Fullers Auto**\n\nYour website scored 40 out of 100 for security, which puts you at risk in several important ways.\n\nThe biggest concern is that your site doesn't force secure connections, making it easier for hackers to intercept customer information on public WiFi. You're also missing basic protections that prevent malicious websites from embedding your pages or running harmful code on them.\n\nYour WordPress login page is exposed to the internet, which means automated attacks are constantly trying to guess your password. Additionally, your site reveals it runs on ASP.NET, giving attackers hints about which vulnerabilities to target.\n\nThese issues could hurt your business in three ways: customers might lose trust if they sense your site isn't secure, Google may rank you lower in search results since they favor secure websites, and you're more vulnerable to actual attacks that could take your site offline or steal customer data.\n\nThe good news is these are all standard fixes that most web developers know how to implement. None of them require rebuilding your website from scratch.\n\nFixing these security gaps would protect your customers' information, improve your Google rankings, and give you peace of mind that your online presence is properly secured.",
+  "contact": {
+    "name": "Blake Corbit",
+    "title": "Website Security Consultant",
+    "email": "blake.a.corbit@gmail.com",
+    "phone": "603-732-3032",
+    "website": "apollostable.com"
+  },
+  "generated_at": "2026-03-23 19:20:40"
+}

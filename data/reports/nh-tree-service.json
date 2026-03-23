@@ -1,0 +1,67 @@
+{
+  "business": {
+    "name": "NH Tree Service",
+    "slug": "nh-tree-service",
+    "url": "https://nhtreeservices.com",
+    "category": "tree service",
+    "city": "Nashua"
+  },
+  "scan": {
+    "score": 63,
+    "grade": "C",
+    "findings": [
+      {
+        "id": "no-xfo",
+        "severity": "medium",
+        "points": 8,
+        "title": "No clickjacking protection",
+        "detail": "The site can be embedded in an iframe on a malicious page. An attacker could trick visitors into clicking buttons they can't see (clickjacking)."
+      },
+      {
+        "id": "no-csp",
+        "severity": "medium",
+        "points": 8,
+        "title": "No Content Security Policy",
+        "detail": "Without a CSP, the browser allows scripts from anywhere to run on the page. If an attacker injects malicious code, nothing stops it from executing."
+      },
+      {
+        "id": "admin-exposed-wploginphp",
+        "severity": "medium",
+        "points": 10,
+        "title": "WordPress login page publicly accessible",
+        "detail": "The page at /wp-login.php is reachable by anyone. Attackers use automated tools to try common passwords against login pages like this around the clock."
+      },
+      {
+        "id": "no-referrer-policy",
+        "severity": "low",
+        "points": 3,
+        "title": "No Referrer Policy",
+        "detail": "The site may leak the full URL (including sensitive query parameters) to other sites when visitors click links."
+      },
+      {
+        "id": "no-permissions-policy",
+        "severity": "low",
+        "points": 3,
+        "title": "No Permissions Policy",
+        "detail": "The site hasn't restricted access to browser features like camera, microphone, or geolocation. Third-party scripts could request these without your knowledge."
+      },
+      {
+        "id": "cookie-flags",
+        "severity": "low",
+        "points": 5,
+        "title": "Cookies missing security flags",
+        "detail": "Cookies are set without: HttpOnly flag. This makes them easier to steal or misuse in cross-site attacks."
+      }
+    ],
+    "scanned_at": "2026-03-23 19:20:09"
+  },
+  "narrative": "**Security Report for NH Tree Services**\n\nYour website scored a C grade (63/100) for security, which puts your business at some unnecessary risk. Here's what that means for you.\n\nThe biggest concern is your WordPress login page is wide open for anyone to find and attack. Hackers run automated programs that try thousands of password combinations on sites like yours every day. If they get in, they could deface your site, steal customer information, or use it to send spam.\n\nYour site also lacks basic protections that prevent malicious code from running if someone manages to inject it. Think of it like leaving your storefront unlocked – most people won't cause trouble, but you're making it easy for those who will.\n\nThere are also some smaller issues with how your site handles visitor information and browser permissions that could affect customer trust and potentially your Google rankings.\n\nThe good news? These are all standard fixes that any web developer familiar with WordPress can handle in a few hours. None of this means your site is currently hacked or that customers are in immediate danger.\n\nFixing these security gaps would protect your business reputation, keep customer data safe, and likely improve your search engine rankings.",
+  "contact": {
+    "name": "Blake Corbit",
+    "title": "Website Security Consultant",
+    "email": "blake.a.corbit@gmail.com",
+    "phone": "603-732-3032",
+    "website": "apollostable.com"
+  },
+  "generated_at": "2026-03-23 19:21:04"
+}

@@ -1,0 +1,32 @@
+{
+  "business": {
+    "name": "Boynton Fencing",
+    "slug": "boynton-fencing",
+    "url": "https://boyntonfencing.com",
+    "category": "fencing",
+    "city": "Milford"
+  },
+  "scan": {
+    "score": 0,
+    "grade": "F",
+    "findings": [
+      {
+        "id": "unreachable",
+        "severity": "critical",
+        "points": 100,
+        "title": "Website unreachable",
+        "detail": "Could not connect to the website at all. It may be down or the URL may be incorrect."
+      }
+    ],
+    "scanned_at": "2026-03-23 19:20:06"
+  },
+  "narrative": "**Website Security Report for Boynton Fencing**\n\nI have some concerning news about your website. When I tried to visit boyntonfencing.com, it wouldn't load at all. This means your website is completely unreachable right now.\n\nThis is a serious problem for your business. Every potential customer who tries to find you online will hit a dead end. They can't see your work, get your contact information, or request quotes. Many will simply move on to your competitors instead of trying to track you down another way.\n\nBeyond losing customers, this also hurts you with Google. Search engines can't find or rank websites that don't work, so you're essentially invisible online. For a local business like yours, that means missing out on people searching for \"fencing contractors near me\" or \"fence installation Milford.\"\n\nThe issue could be that your web hosting expired, there's a technical problem with your server, or the domain name needs renewal. These are all fixable problems, but they need immediate attention.\n\nGetting your website back online would put you back in front of potential customers and restore your online presence so people can find and contact you again.",
+  "contact": {
+    "name": "Blake Corbit",
+    "title": "Website Security Consultant",
+    "email": "blake.a.corbit@gmail.com",
+    "phone": "603-732-3032",
+    "website": "apollostable.com"
+  },
+  "generated_at": "2026-03-23 19:20:47"
+}

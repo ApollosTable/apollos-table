@@ -1,0 +1,82 @@
+{
+  "business": {
+    "name": "JL Heating & Cooling",
+    "slug": "jl-heating-cooling",
+    "url": "https://jlheatingandcooling.com",
+    "category": "hvac",
+    "city": "Amherst"
+  },
+  "scan": {
+    "score": 48,
+    "grade": "D",
+    "findings": [
+      {
+        "id": "wp-xmlrpc",
+        "severity": "high",
+        "points": 12,
+        "title": "WordPress XML-RPC enabled",
+        "detail": "XML-RPC is an old remote access feature that attackers frequently exploit for brute-force password attacks and DDoS amplification. Most sites don't need it."
+      },
+      {
+        "id": "no-xfo",
+        "severity": "medium",
+        "points": 8,
+        "title": "No clickjacking protection",
+        "detail": "The site can be embedded in an iframe on a malicious page. An attacker could trick visitors into clicking buttons they can't see (clickjacking)."
+      },
+      {
+        "id": "no-csp",
+        "severity": "medium",
+        "points": 8,
+        "title": "No Content Security Policy",
+        "detail": "Without a CSP, the browser allows scripts from anywhere to run on the page. If an attacker injects malicious code, nothing stops it from executing."
+      },
+      {
+        "id": "admin-exposed-wploginphp",
+        "severity": "medium",
+        "points": 10,
+        "title": "WordPress login page publicly accessible",
+        "detail": "The page at /wp-login.php is reachable by anyone. Attackers use automated tools to try common passwords against login pages like this around the clock."
+      },
+      {
+        "id": "no-xcto",
+        "severity": "low",
+        "points": 5,
+        "title": "Missing X-Content-Type-Options header",
+        "detail": "Without this header, browsers might misinterpret files, which can lead to security vulnerabilities."
+      },
+      {
+        "id": "no-referrer-policy",
+        "severity": "low",
+        "points": 3,
+        "title": "No Referrer Policy",
+        "detail": "The site may leak the full URL (including sensitive query parameters) to other sites when visitors click links."
+      },
+      {
+        "id": "no-permissions-policy",
+        "severity": "low",
+        "points": 3,
+        "title": "No Permissions Policy",
+        "detail": "The site hasn't restricted access to browser features like camera, microphone, or geolocation. Third-party scripts could request these without your knowledge."
+      },
+      {
+        "id": "wp-detected",
+        "severity": "low",
+        "points": 3,
+        "title": "WordPress detected",
+        "detail": "The site runs on WordPress. This is not inherently bad, but WordPress sites require regular updates to stay secure.",
+        "cms": "wordpress"
+      }
+    ],
+    "scanned_at": "2026-03-23 19:20:11"
+  },
+  "narrative": "## Website Security Report for JL Heating & Cooling\n\nYour website at jlheatingandcooling.com has some security gaps that could hurt your business. Here's what's happening and why it matters.\n\nThe biggest problem is that hackers can easily attack your WordPress login page. They use automated programs that try thousands of password combinations every day, potentially breaking into your site and damaging your reputation with customers.\n\nYour site also lacks basic protections that modern browsers expect. Without these safeguards, malicious websites could trick your visitors or inject harmful code into your pages. This doesn't just put your customers at risk—Google notices these security issues and may lower your search rankings, making it harder for new customers to find you.\n\nAdditionally, your site could be used in large-scale internet attacks without you knowing, which could get you blacklisted by internet providers.\n\nThe good news? These are all fixable problems. Most HVAC businesses in Amherst probably have similar issues, so addressing them would actually give you a competitive advantage.\n\nFixing these security problems would protect your business reputation, improve your Google search rankings, and give your customers confidence when they visit your website.",
+  "contact": {
+    "name": "Blake Corbit",
+    "title": "Website Security Consultant",
+    "email": "blake.a.corbit@gmail.com",
+    "phone": "603-732-3032",
+    "website": "apollostable.com"
+  },
+  "generated_at": "2026-03-23 19:21:41"
+}

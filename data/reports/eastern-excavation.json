@@ -1,0 +1,103 @@
+{
+  "business": {
+    "name": "Eastern Excavation",
+    "slug": "eastern-excavation",
+    "url": "https://easternexcavation.com",
+    "category": "excavation",
+    "city": "Amherst"
+  },
+  "scan": {
+    "score": 24,
+    "grade": "F",
+    "findings": [
+      {
+        "id": "no-https-redirect",
+        "severity": "medium",
+        "points": 10,
+        "title": "No automatic HTTPS redirect",
+        "detail": "Visiting the site via http:// does not redirect to the secure https:// version. This means some visitors are using an unencrypted connection without knowing it."
+      },
+      {
+        "id": "no-hsts",
+        "severity": "medium",
+        "points": 10,
+        "title": "No HSTS header",
+        "detail": "The site doesn't tell browsers to always use HTTPS. An attacker on the same network (like public WiFi) could intercept the connection before encryption kicks in."
+      },
+      {
+        "id": "no-xfo",
+        "severity": "medium",
+        "points": 8,
+        "title": "No clickjacking protection",
+        "detail": "The site can be embedded in an iframe on a malicious page. An attacker could trick visitors into clicking buttons they can't see (clickjacking)."
+      },
+      {
+        "id": "no-csp",
+        "severity": "medium",
+        "points": 8,
+        "title": "No Content Security Policy",
+        "detail": "Without a CSP, the browser allows scripts from anywhere to run on the page. If an attacker injects malicious code, nothing stops it from executing."
+      },
+      {
+        "id": "admin-exposed-wploginphp",
+        "severity": "medium",
+        "points": 10,
+        "title": "WordPress login page publicly accessible",
+        "detail": "The page at /wp-login.php is reachable by anyone. Attackers use automated tools to try common passwords against login pages like this around the clock."
+      },
+      {
+        "id": "mixed-content",
+        "severity": "medium",
+        "points": 8,
+        "title": "Mixed content (HTTP resources on HTTPS page)",
+        "detail": "The page loads 2 resource(s) over unencrypted HTTP. This partially defeats the protection that HTTPS provides."
+      },
+      {
+        "id": "outdated-jquery",
+        "severity": "medium",
+        "points": 8,
+        "title": "Outdated jQuery 3.3.1",
+        "detail": "The site uses jQuery 3.3.1, which has known security vulnerabilities (XSS). Current version is 3.7+."
+      },
+      {
+        "id": "no-xcto",
+        "severity": "low",
+        "points": 5,
+        "title": "Missing X-Content-Type-Options header",
+        "detail": "Without this header, browsers might misinterpret files, which can lead to security vulnerabilities."
+      },
+      {
+        "id": "no-referrer-policy",
+        "severity": "low",
+        "points": 3,
+        "title": "No Referrer Policy",
+        "detail": "The site may leak the full URL (including sensitive query parameters) to other sites when visitors click links."
+      },
+      {
+        "id": "no-permissions-policy",
+        "severity": "low",
+        "points": 3,
+        "title": "No Permissions Policy",
+        "detail": "The site hasn't restricted access to browser features like camera, microphone, or geolocation. Third-party scripts could request these without your knowledge."
+      },
+      {
+        "id": "joomla-detected",
+        "severity": "low",
+        "points": 3,
+        "title": "Joomla CMS detected",
+        "detail": "The site runs on Joomla. Keep it updated to avoid known vulnerabilities.",
+        "cms": "joomla"
+      }
+    ],
+    "scanned_at": "2026-03-23 19:20:08"
+  },
+  "narrative": "**Website Security Report for Eastern Excavation**\n\nYour website has some serious security gaps that could hurt your business. Right now, it scored 24 out of 100 — that's an F grade.\n\nThe biggest problem is that your site isn't properly forcing secure connections. When customers visit, they might end up on an unencrypted version without knowing it, making their information vulnerable to hackers on public WiFi. Google also ranks secure sites higher in search results, so this could be costing you customers who never find you.\n\nYour WordPress login page is completely exposed, which means hackers are probably already trying to break in with automated attacks. Your site is also using outdated software with known security holes, and it's loading some content that isn't encrypted.\n\nAdditionally, your site has no protection against common attacks like clickjacking (where criminals trick people into clicking hidden buttons) or malicious code injection.\n\nFor a business like yours, a security breach could mean stolen customer information, a hacked website showing inappropriate content, or your site going completely offline during your busy season.\n\nFixing these security issues would protect your customers' information, improve your Google search ranking, and give you peace of mind that your online presence is safe.",
+  "contact": {
+    "name": "Blake Corbit",
+    "title": "Website Security Consultant",
+    "email": "blake.a.corbit@gmail.com",
+    "phone": "603-732-3032",
+    "website": "apollostable.com"
+  },
+  "generated_at": "2026-03-23 19:20:55"
+}

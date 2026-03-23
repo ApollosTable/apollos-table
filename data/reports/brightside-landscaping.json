@@ -1,0 +1,32 @@
+{
+  "business": {
+    "name": "Brightside Landscaping",
+    "slug": "brightside-landscaping",
+    "url": "https://brightsidelandscapingnh.com",
+    "category": "landscaping",
+    "city": "Milford"
+  },
+  "scan": {
+    "score": 0,
+    "grade": "F",
+    "findings": [
+      {
+        "id": "unreachable",
+        "severity": "critical",
+        "points": 100,
+        "title": "Website unreachable",
+        "detail": "Could not connect to the website at all. It may be down or the URL may be incorrect."
+      }
+    ],
+    "scanned_at": "2026-03-23 19:20:11"
+  },
+  "narrative": "**Website Security Report for Brightside Landscaping**\n\nI have some concerning news about your website. When I tried to visit brightsidelandscapingnh.com, it simply wouldn't load at all. This means your website is completely unreachable to potential customers right now.\n\nThis is a serious problem for your landscaping business. When homeowners in Milford search for landscaping services and find your business online, they can't actually visit your website to see your work, get your contact information, or request quotes. You're essentially invisible to new customers who discover you through Google searches or business directories.\n\nGoogle also penalizes websites that are consistently unreachable, which means your business will show up lower in search results over time. This makes it even harder for local customers to find you when they need landscaping work done.\n\nThe issue could be as simple as your web hosting service being down, an expired domain name, or a technical problem that needs fixing. Sometimes it's just a billing issue with your website provider.\n\nGetting your website back online would immediately restore your digital presence and stop you from losing potential customers who can't reach you.",
+  "contact": {
+    "name": "Blake Corbit",
+    "title": "Website Security Consultant",
+    "email": "blake.a.corbit@gmail.com",
+    "phone": "603-732-3032",
+    "website": "apollostable.com"
+  },
+  "generated_at": "2026-03-23 19:21:48"
+}

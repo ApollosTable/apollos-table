@@ -1,0 +1,60 @@
+{
+  "business": {
+    "name": "Nashua Wallpaper & Paint",
+    "slug": "nashua-wallpaper-paint",
+    "url": "https://nashuawallpaper.com",
+    "category": "painting",
+    "city": "Nashua"
+  },
+  "scan": {
+    "score": 73,
+    "grade": "C",
+    "findings": [
+      {
+        "id": "no-xfo",
+        "severity": "medium",
+        "points": 8,
+        "title": "No clickjacking protection",
+        "detail": "The site can be embedded in an iframe on a malicious page. An attacker could trick visitors into clicking buttons they can't see (clickjacking)."
+      },
+      {
+        "id": "no-csp",
+        "severity": "medium",
+        "points": 8,
+        "title": "No Content Security Policy",
+        "detail": "Without a CSP, the browser allows scripts from anywhere to run on the page. If an attacker injects malicious code, nothing stops it from executing."
+      },
+      {
+        "id": "no-xcto",
+        "severity": "low",
+        "points": 5,
+        "title": "Missing X-Content-Type-Options header",
+        "detail": "Without this header, browsers might misinterpret files, which can lead to security vulnerabilities."
+      },
+      {
+        "id": "no-referrer-policy",
+        "severity": "low",
+        "points": 3,
+        "title": "No Referrer Policy",
+        "detail": "The site may leak the full URL (including sensitive query parameters) to other sites when visitors click links."
+      },
+      {
+        "id": "no-permissions-policy",
+        "severity": "low",
+        "points": 3,
+        "title": "No Permissions Policy",
+        "detail": "The site hasn't restricted access to browser features like camera, microphone, or geolocation. Third-party scripts could request these without your knowledge."
+      }
+    ],
+    "scanned_at": "2026-03-23 19:20:07"
+  },
+  "narrative": "## Security Report for Nashua Wallpaper & Paint\n\nYour website scored 73 out of 100 on security – that's a C grade. The good news is you're not in immediate danger, but there are some gaps that could hurt your business.\n\nThe biggest concern is that your site lacks protection against sneaky attacks where criminals could trick your customers into clicking things they can't see, or inject harmful code that runs invisibly in their browsers. This could damage customer trust and send people straight to your competitors.\n\nYour site also shares more information than it should when customers click links, and doesn't control what browser features (like cameras or microphones) other scripts might try to access. While these aren't emergency fixes, they do make your site look less professional to search engines like Google.\n\nNone of these issues will shut you down tomorrow, but they're like leaving your shop door unlocked – unnecessary risks that could cost you customers and search ranking over time.\n\nFixing these security gaps would give your customers confidence, improve your Google rankings, and show that Nashua Wallpaper & Paint takes their online safety seriously.",
+  "contact": {
+    "name": "Blake Corbit",
+    "title": "Website Security Consultant",
+    "email": "blake.a.corbit@gmail.com",
+    "phone": "603-732-3032",
+    "website": "apollostable.com"
+  },
+  "generated_at": "2026-03-23 19:20:32"
+}
