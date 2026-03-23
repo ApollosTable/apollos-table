@@ -10,7 +10,8 @@
     "scan": "node cli.js scan",
     "discover": "node cli.js discover",
     "report": "node cli.js report",
-    "export": "node cli.js export"
+    "export": "node cli.js export",
+    "test": "jest --runInBand --forceExit"
   },
   "author": "Blake Corbit",
   "license": "MIT",
@@ -21,5 +22,8 @@
     "dotenv": "^17.3.1",
     "node-html-parser": "^7.0.1",
     "nodemailer": "^8.0.3"
+  },
+  "devDependencies": {
+    "jest": "^30.3.0"
   }
 }
