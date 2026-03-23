@@ -31,6 +31,9 @@ if (fs.existsSync(distPath)) {
 const PORT = process.env.PORT || 3000;
 const server = app.listen(PORT, () => {
   console.log(`Apollo's Table server listening on port ${PORT}`);
+
+  const { startJobs } = require('./shared/jobs');
+  startJobs();
 });
 
 module.exports = server;
