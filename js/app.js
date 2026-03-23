@@ -7,7 +7,7 @@
 
   // ---- Config ----
   const PASS_KEY = 'apollo_gate';
-  const DEFAULT_HASH = '3293409'; // simple hash of "apollo"
+  const DEFAULT_HASH = '1411091249'; // simple hash of "apollo"
   const DATA_PATH = 'data/data.json';
 
   // ---- Simple string hash (not crypto, just a door) ----
