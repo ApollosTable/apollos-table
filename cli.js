@@ -341,4 +341,52 @@ program
     db.close();
   });
 
+// -- Add a region --
+program
+  .command('region-add <name>')
+  .description('Add a geographic region')
+  .option('-s, --state <state>', 'State abbreviation')
+  .option('--cities <cities>', 'Comma-separated list of cities')
+  .option('--categories <categories>', 'Comma-separated list of categories')
+  .action((name, opts) => {
+    const slug = db.slugify(name);
+    const cities = opts.cities ? opts.cities.split(',').map(c => c.trim()) : [];
+    const categories = opts.categories
+      ? opts.categories.split(',').map(c => c.trim())
+      : config.categories;
+
+    const result = db.addRegion({ slug, name, state: opts.state, cities, categories });
+    console.log(`Added region: ${name} (slug: ${result.slug}, id: ${result.id})`);
+    db.close();
+  });
+
+// -- List regions --
+program
+  .command('regions')
+  .description('List all regions')
+  .action(() => {
+    const regions = db.listRegions();
+
+    if (regions.length === 0) {
+      console.log('\nNo regions found. Run "apollo region-add" to create one.\n');
+      db.close();
+      return;
+    }
+
+    console.log(`\n${'Name'.padEnd(25)} ${'State'.padEnd(8)} ${'Cities'.padEnd(40)} Categories`);
+    console.log('-'.repeat(100));
+    for (const r of regions) {
+      const cities = JSON.parse(r.cities || '[]');
+      const cats = r.categories ? JSON.parse(r.categories) : [];
+      console.log(
+        `${(r.name || '').slice(0, 24).padEnd(25)} ` +
+        `${(r.state || '-').padEnd(8)} ` +
+        `${cities.join(', ').slice(0, 39).padEnd(40)} ` +
+        `${cats.length} categories`
+      );
+    }
+    console.log(`\n${regions.length} regions total.\n`);
+    db.close();
+  });
+
 program.parse();

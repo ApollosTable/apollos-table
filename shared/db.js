@@ -94,8 +94,11 @@ function migrate() {
   db.exec(`
     CREATE TABLE IF NOT EXISTS regions (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
+      slug TEXT UNIQUE NOT NULL,
       name TEXT UNIQUE NOT NULL,
+      state TEXT,
       cities TEXT NOT NULL,
+      categories TEXT,
       created_at TEXT DEFAULT (datetime('now'))
     );
 
@@ -226,12 +229,28 @@ function migrate() {
     WHERE pipeline_stage IS NULL OR pipeline_stage = 'discovered'
   `);
 
+  // -- Add columns to regions for existing DBs --
+  addColumnIfMissing('regions', 'slug', 'TEXT');
+  addColumnIfMissing('regions', 'state', 'TEXT');
+  addColumnIfMissing('regions', 'categories', 'TEXT');
+
+  // Backfill slug for regions missing it
+  const regionsNoSlug = db.prepare("SELECT id, name FROM regions WHERE slug IS NULL").all();
+  if (regionsNoSlug.length > 0) {
+    const updateSlug = db.prepare('UPDATE regions SET slug = ? WHERE id = ?');
+    for (const r of regionsNoSlug) {
+      updateSlug.run(slugify(r.name), r.id);
+    }
+    // Now add unique index if not present
+  }
+  db.exec('CREATE UNIQUE INDEX IF NOT EXISTS idx_regions_slug ON regions(slug)');
+
   // -- Seed default region if none exist --
   const regionCount = db.prepare('SELECT COUNT(*) as count FROM regions').get().count;
   if (regionCount === 0) {
     db.prepare(
-      "INSERT INTO regions (name, cities) VALUES (?, ?)"
-    ).run('Southern NH', JSON.stringify(['Milford', 'Nashua', 'Amherst', 'Hollis', 'Bedford', 'Merrimack']));
+      "INSERT INTO regions (slug, name, state, cities) VALUES (?, ?, ?, ?)"
+    ).run('southern-nh', 'Southern NH', 'NH', JSON.stringify(['Milford', 'Nashua', 'Amherst', 'Hollis', 'Bedford', 'Merrimack']));
   }
 }
 
@@ -429,12 +448,19 @@ function getPipeline() {
 
 // -- Region operations --
 
-function addRegion({ name, cities }) {
+function addRegion({ slug, name, state, cities, categories }) {
   const d = getDb();
-  const result = d.prepare('INSERT INTO regions (name, cities) VALUES (?, ?)').run(
-    name, JSON.stringify(cities)
+  const regionSlug = slug || slugify(name);
+  const result = d.prepare(
+    'INSERT INTO regions (slug, name, state, cities, categories) VALUES (?, ?, ?, ?, ?)'
+  ).run(
+    regionSlug,
+    name,
+    state || null,
+    JSON.stringify(Array.isArray(cities) ? cities : []),
+    categories ? JSON.stringify(Array.isArray(categories) ? categories : []) : null
   );
-  return { id: result.lastInsertRowid };
+  return { id: result.lastInsertRowid, slug: regionSlug };
 }
 
 function getRegion(id) {
