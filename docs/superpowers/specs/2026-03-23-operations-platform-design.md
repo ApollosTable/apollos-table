@@ -243,6 +243,10 @@ The existing SQLite schema covers businesses, scans, reports, and outreach. We n
 
 ### New Tables
 
+**regions** — Target markets for discovery
+- id, slug, name, state, cities (JSON array), categories (JSON array), active (boolean)
+- created_at
+
 **clients** — Businesses that became paying clients
 - id, business_id (FK), tier (fix/monitoring/rebuild), status (active/churned/completed)
 - monthly_rate, total_paid, started_at, churned_at
@@ -250,9 +254,27 @@ The existing SQLite schema covers businesses, scans, reports, and outreach. We n
 - notes
 
 **projects** — Individual work items (fixes, rebuilds)
-- id, client_id (FK), type (fix/rebuild), scope (JSON), status
+- id, client_id (FK), type (fix/rebuild), scope (JSON — see schema below), status
 - price, paid_at, started_at, completed_at
+- stripe_payment_link (manual in Phase 1, automated later)
 - verification_scan_id (FK to scans)
+
+**Scope JSON schema:**
+```json
+{
+  "items": [
+    {
+      "finding_id": "no-https",
+      "description": "Install and configure SSL certificate",
+      "estimated_hours": 0.5,
+      "price": 75,
+      "status": "pending"
+    }
+  ],
+  "total_price": 375,
+  "tier": "fix"
+}
+```
 
 **support_tickets** — Tech support interactions
 - id, client_id (FK), subject, body, priority, status
@@ -260,43 +282,61 @@ The existing SQLite schema covers businesses, scans, reports, and outreach. We n
 - response_draft, resolved_at
 
 **interactions** — All client touchpoints (emails sent, replies, calls, notes)
-- id, business_id (FK), client_id (FK nullable), type, direction (inbound/outbound)
+- id, business_id (FK), type, direction (inbound/outbound)
 - subject, body, created_at
+
+Note: Use `business_id` as the single FK. For client interactions, join through `clients.business_id`. This avoids ambiguity from competing foreign keys.
 
 **scheduled_scans** — Recurring scan configuration for monitoring clients
 - id, client_id (FK), frequency (weekly/monthly), last_run, next_run
+- baseline_scan_id (FK to scans — the "healthy" reference point)
+- alert_threshold INTEGER DEFAULT 5 (score drop that triggers alert)
+- notify_client BOOLEAN DEFAULT 1
+
+Monitoring scans write to the same `scans` table with a `source` column ('manual'/'scheduled') to distinguish them.
 
 ### Schema Changes to Existing Tables
 
 **businesses** — Add columns:
-- region (for multi-region support)
+- pipeline_stage TEXT DEFAULT 'discovered' (explicit stage tracking — replaces the derived CASE logic in getPipeline)
+- region_id (FK to regions)
+- domain TEXT (extracted hostname, indexed — fixes O(n) dedup in discover)
 - cold_pool_until (date to re-scan)
 - referral_source
+- unsubscribed BOOLEAN DEFAULT 0 (CAN-SPAM compliance)
 
 **outreach** — Add columns:
-- follow_up_count (track how many follow-ups sent)
+- email_subject TEXT (dedicated column instead of JSON in notes)
+- email_body TEXT (dedicated column instead of JSON in notes)
+- follow_up_count INTEGER DEFAULT 0
 - follow_up_due (next follow-up date)
 - reply_text (their actual response)
 - reply_classification (interested/question/not_interested/wrong_person)
+
+**scans** — Add column:
+- source TEXT DEFAULT 'manual' (manual/scheduled — distinguishes monitoring scans)
 
 ---
 
 ## Region System
 
-Everything is parameterized by region. A region is:
+Regions are stored in the `regions` SQLite table (not config files) so they can be managed from the dashboard. A region is:
 ```json
 {
-  "id": "southern-nh",
+  "id": 1,
+  "slug": "southern-nh",
   "name": "Southern NH",
-  "cities": ["Milford", "Nashua", "Amherst", "Hollis", "Bedford", "Merrimack"],
   "state": "NH",
+  "cities": ["Milford", "Nashua", "Amherst", "Hollis", "Bedford", "Merrimack"],
   "categories": ["plumber", "electrician", "hvac", "roofer", "landscaper", "auto repair"],
   "active": true
 }
 ```
 
+The existing `config.default.json` location is imported as the default region on first migration. `discoverAll()` is modified to accept a `region_id` parameter instead of reading from config. Every discovered business gets a `region_id` FK.
+
 When Blake is ready to expand:
-1. Add a new region config
+1. Add a new region in the dashboard (or via CLI)
 2. Run discovery for that region
 3. Everything else (scan, report, outreach) works the same
 
@@ -328,6 +368,47 @@ The dashboard needs a local backend (the current static GitHub Pages approach ca
 
 **Public site (GitHub Pages) remains separate** — just the public-facing reports. The local server handles everything else.
 
+### Email Infrastructure
+
+Nodemailer is already a dependency but no sending code exists yet. This is a Phase 1 blocker.
+
+**Outbound email (Phase 1):**
+- SMTP config stored in `.env` (provider, host, port, user, password)
+- Gmail SMTP to start (500/day limit is fine for early scale — 500 emails covers months of outreach)
+- Shared `sendEmail(to, subject, body, opts)` function used by all lanes
+- All emails include: physical mailing address in footer, unsubscribe link (CAN-SPAM compliance)
+- Unsubscribe link hits a route on the public site that marks `businesses.unsubscribed = 1`
+- Delivery status tracked: sent, bounced, opened (if using a provider that supports tracking)
+- Rate limiting: max 50 emails/hour, configurable
+
+**Inbound email (Phase 2):**
+- IMAP polling via `node-imap` on a timer (every 5 minutes)
+- Monitors a dedicated inbox (e.g., support@[domain])
+- Matching rules: check sender against known business emails, check subject for reply threads (In-Reply-To header or subject prefix matching)
+- Matched emails → create interaction record + route to correct lane (reply to outreach → Lane 2, client issue → Lane 5)
+- Unmatched emails → queue for manual review in dashboard
+- Phase 1 workaround: Blake manually copies reply text into the dashboard. Not ideal but unblocks Lane 2 without building IMAP integration.
+
+### Background Job System
+
+Uses `node-cron` for scheduling recurring tasks. All jobs are simple database polling loops.
+
+**Scheduled jobs:**
+| Job | Schedule | Logic |
+|-----|----------|-------|
+| `scan-monitor` | Daily 2am | Check `scheduled_scans.next_run <= now()`, run scans, update `next_run`, compare to baseline, alert on drops |
+| `follow-up-check` | Daily 9am | Check `outreach.follow_up_due <= now() AND follow_up_count < 2`, draft follow-up emails, queue for review |
+| `cold-pool-rescan` | Daily 3am | Check `businesses.cold_pool_until <= now()`, re-scan, generate new report if score changed |
+| `health-reports` | 1st of month | Generate and queue monthly health reports for all monitoring clients |
+
+Jobs log to a `job_runs` table (job_name, started_at, completed_at, result, error) for debugging. Dashboard shows job status.
+
+### Database Backup
+
+SQLite is a single file. If Blake's machine dies, everything is gone.
+
+**Backup strategy:** Nightly copy of `apollo.db` to a timestamped file in a synced folder (OneDrive). A `node-cron` job at midnight: `cp apollo.db ~/OneDrive/backups/apollo-YYYY-MM-DD.db`. Keep 30 days of backups, delete older.
+
 ---
 
 ## Growth Mechanics (No Social Media)
@@ -343,10 +424,12 @@ The dashboard needs a local backend (the current static GitHub Pages approach ca
 - Links to their actual report (proof of value before asking for anything)
 - Follow-up sequence: initial → 5 days → 10 days → cold pool
 - Track open rates and reply rates per region/category to optimize
+- CAN-SPAM compliant: physical address in footer, unsubscribe link, opt-outs honored immediately
+- Filter out `businesses.unsubscribed = 1` before any outreach batch
 
 ### Badge Backlinks
 - Monitoring clients get a "Protected by [brand]" badge on their site
-- Badge links to their report (showing good score)
+- Badge uses a stable redirect URL: `[domain]/r/[slug]` — survives domain/brand changes
 - Every client site becomes a lead generator
 
 ### Referral Loop
@@ -377,23 +460,28 @@ The dashboard needs a local backend (the current static GitHub Pages approach ca
 | Monitor clients | Check alerts | Runs scheduled scans, drafts alerts |
 | Handle support | Review, send | Classifies, drafts responses |
 
-**Blake's time per client: ~30 minutes total, discovery through delivery.** The rest is Claude and automation.
+**Target (Phase 3):** ~30 minutes per client, discovery through delivery. Phase 1 reality: expect 1–2 hours per client while tooling matures alongside real usage. That's fine — the first 10–20 clients build the muscle and the automation simultaneously.
 
 ---
 
 ## Implementation Priority
 
 ### Phase 1: Core Pipeline (Ship first dollar)
-- Extend database schema
-- Local API server
+- Extend database schema (explicit pipeline_stage, regions table, domain column, new tables)
+- Local API server (Express/Fastify + REST endpoints)
+- Email sending infrastructure (Nodemailer + SMTP + CAN-SPAM compliance)
 - Lane 1 dashboard (sales funnel with full workflow)
-- Lane 2 basics (onboarding with scope generation + Stripe link)
-- Region system
+- Lane 2 basics (onboarding with scope generation + manual Stripe link)
+- Region system (DB-backed, migrate existing config as default region)
+- Background jobs (node-cron: follow-up checks, cold pool rescans)
+- Database backup job
 - CLI commands still work alongside dashboard
 
 ### Phase 2: Delivery + Accounts
+- Inbound email integration (IMAP polling, thread matching, routing to lanes)
 - Lane 3 (delivery tracking, verification scans, before/after)
 - Lane 4 (monitoring, scheduled scans, health reports, badge system)
+- Stripe API integration (automated payment links, webhook for payment confirmation)
 - Revenue tracking
 
 ### Phase 3: Support + Growth
