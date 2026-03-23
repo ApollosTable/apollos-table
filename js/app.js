@@ -222,60 +222,107 @@
     el.textContent = 'Updated ' + relativeTime(ts);
   }
 
-  function initFilters(allDeals, container) {
-    var gradeFilter = document.getElementById('filter-grade');
-    var profitSlider = document.getElementById('filter-profit');
-    var investSlider = document.getElementById('filter-max-invest');
-    var profitVal = document.getElementById('filter-profit-val');
-    var investVal = document.getElementById('filter-max-invest-val');
-    var shippableCheck = document.getElementById('filter-shippable');
-    var countEl = document.getElementById('filter-count');
+  // ---- User Preferences ----
+  var PREFS_KEY = 'apollo_prefs';
 
-    if (!gradeFilter) return;
+  function loadPrefs() {
+    try { return JSON.parse(localStorage.getItem(PREFS_KEY)) || {}; } catch { return {}; }
+  }
 
-    var maxProfit = 0;
-    var maxPrice = 0;
-    allDeals.forEach(function (d) {
-      if ((d.estimated_profit || 0) > maxProfit) maxProfit = d.estimated_profit;
-      if ((d.price || 0) > maxPrice) maxPrice = d.price;
+  function savePrefs(p) {
+    localStorage.setItem(PREFS_KEY, JSON.stringify(p));
+  }
+
+  function initPrefsPanel() {
+    var zip = document.getElementById('pref-zip');
+    var radius = document.getElementById('pref-radius');
+    var invest = document.getElementById('pref-invest');
+    var profit = document.getElementById('pref-profit');
+    var grade = document.getElementById('pref-grade');
+    var shippable = document.getElementById('pref-shippable');
+    var saveBtn = document.getElementById('pref-save');
+    var msg = document.getElementById('pref-msg');
+
+    if (!saveBtn) return;
+
+    var p = loadPrefs();
+    if (zip && p.zip) zip.value = p.zip;
+    if (radius) { radius.value = p.radius || 30; setText('pref-radius-val', (p.radius || 30) + ' mi'); }
+    if (invest) { invest.value = p.invest || 50; setText('pref-invest-val', currency(p.invest || 50)); }
+    if (profit) { profit.value = p.profit || 25; setText('pref-profit-val', currency(p.profit || 25)); }
+    if (grade && p.grade) grade.value = p.grade;
+    if (shippable && p.shippable) shippable.checked = true;
+
+    function updateLabels() {
+      if (radius) setText('pref-radius-val', radius.value + ' mi');
+      if (invest) setText('pref-invest-val', currency(Number(invest.value)));
+      if (profit) setText('pref-profit-val', currency(Number(profit.value)));
+    }
+    if (radius) radius.addEventListener('input', updateLabels);
+    if (invest) invest.addEventListener('input', updateLabels);
+    if (profit) profit.addEventListener('input', updateLabels);
+
+    saveBtn.addEventListener('click', function () {
+      var prefs = {
+        zip: zip ? zip.value.trim() : '',
+        radius: radius ? Number(radius.value) : 30,
+        invest: invest ? Number(invest.value) : 50,
+        profit: profit ? Number(profit.value) : 25,
+        grade: grade ? grade.value : 'all',
+        shippable: shippable ? shippable.checked : false
+      };
+      savePrefs(prefs);
+      if (msg) {
+        msg.textContent = 'Saved — refreshing deals';
+        msg.style.color = 'var(--green)';
+        setTimeout(function () { msg.textContent = ''; }, 2000);
+      }
+      // Re-filter deals with new prefs
+      if (window._apolloRefilter) window._apolloRefilter();
     });
+  }
 
-    if (profitSlider) {
-      profitSlider.max = Math.ceil(maxProfit / 10) * 10 || 500;
-      profitSlider.value = 0;
-    }
-    if (investSlider) {
-      investSlider.max = Math.max(Math.ceil(maxPrice / 5) * 5, 100);
-      investSlider.value = investSlider.max;
-    }
+  function initFilters(allDeals, container) {
+    var countEl = document.getElementById('filter-count');
+    var tagsEl = document.getElementById('filter-tags');
 
     function applyFilters() {
-      var grade = gradeFilter ? gradeFilter.value : 'all';
-      var minProfit = profitSlider ? Number(profitSlider.value) : 0;
-      var maxInvest = investSlider ? Number(investSlider.value) : 9999;
-      var shippableOnly = shippableCheck ? shippableCheck.checked : false;
+      var p = loadPrefs();
+      var minGrade = p.grade || 'all';
+      var minProfit = p.profit || 0;
+      var maxInvest = p.invest || 9999;
+      var shippableOnly = p.shippable || false;
 
-      if (profitVal) profitVal.textContent = currency(minProfit);
-      if (investVal) investVal.textContent = currency(maxInvest);
+      var gradeOrder = ['A', 'B', 'C', 'F'];
 
       var filtered = allDeals.filter(function (d) {
-        if (grade !== 'all' && (d.grade || '').toUpperCase() !== grade.toUpperCase()) return false;
+        if (minGrade !== 'all') {
+          var dealIdx = gradeOrder.indexOf((d.grade || 'F').toUpperCase());
+          var minIdx = gradeOrder.indexOf(minGrade.toUpperCase());
+          if (dealIdx > minIdx) return false;
+        }
         if ((d.estimated_profit || 0) < minProfit) return false;
         if ((d.price || 0) > maxInvest) return false;
         if (shippableOnly && (d.sell_channel || '').toLowerCase() !== 'ebay') return false;
         return true;
       });
 
+      // Render filter tags
+      if (tagsEl) {
+        var tags = [];
+        if (minGrade !== 'all') tags.push('Grade ' + minGrade + '+');
+        if (maxInvest < 9999) tags.push('Max ' + currency(maxInvest));
+        if (minProfit > 0) tags.push(currency(minProfit) + '+ profit');
+        if (shippableOnly) tags.push('eBay shippable');
+        if (p.zip) tags.push(p.zip);
+        tagsEl.innerHTML = tags.map(function (t) { return '<span class="filter-tag">' + t + '</span>'; }).join('');
+      }
+
       if (countEl) countEl.textContent = filtered.length + ' deal' + (filtered.length !== 1 ? 's' : '');
       renderDeals(filtered, container);
     }
 
-    if (gradeFilter) gradeFilter.addEventListener('change', applyFilters);
-    if (profitSlider) profitSlider.addEventListener('input', applyFilters);
-    if (investSlider) investSlider.addEventListener('input', applyFilters);
-    if (shippableCheck) shippableCheck.addEventListener('change', applyFilters);
-
-    // Run filters immediately on load
+    window._apolloRefilter = applyFilters;
     applyFilters();
   }
 
@@ -514,6 +561,7 @@
   document.addEventListener('DOMContentLoaded', function () {
     initGate();
     initSettings();
+    initPrefsPanel();
     initDealsPage();
     initInventoryPage();
     initProfitPage();

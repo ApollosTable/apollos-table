@@ -1084,14 +1084,57 @@ img {
   border: 1px solid rgba(212, 164, 76, 0.25);
 }
 
-/* Shippable filter checkbox */
+/* Checkbox styling */
+.settings-group label input[type="checkbox"],
 .filter-group label input[type="checkbox"] {
   margin-right: 0.4rem;
   accent-color: var(--gold);
 }
+.settings-group label,
 .filter-group label {
   cursor: pointer;
   display: flex;
   align-items: center;
   white-space: nowrap;
+}
+
+/* Prefs slider row */
+.pref-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.pref-slider-row input[type="range"] {
+  flex: 1;
+}
+.pref-val {
+  min-width: 3.5rem;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--gold);
+}
+
+/* Settings divider */
+.settings-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1rem 0;
+}
+
+/* Filter tags */
+.filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.filter-tag {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  background: var(--gold-glow);
+  color: var(--gold);
+  border: 1px solid rgba(212, 164, 76, 0.3);
+  border-radius: 99px;
+  font-size: 0.75rem;
+  font-weight: 500;
 }
