@@ -13,6 +13,10 @@ app.use(express.json());
 // API routes
 app.use('/api/stats', require('./server/api/stats'));
 app.use('/api/regions', require('./server/api/regions'));
+app.use('/api/businesses', require('./server/api/businesses'));
+app.use('/api/scan', require('./server/api/scan'));
+app.use('/api/reports', require('./server/api/reports'));
+app.use('/api/outreach', require('./server/api/outreach'));
 
 // Serve React frontend from app/dist if it exists
 const distPath = path.join(__dirname, 'app', 'dist');
