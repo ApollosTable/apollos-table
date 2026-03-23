@@ -77,4 +77,60 @@ Rules:
   return { subject, body };
 }
 
-module.exports = { generateNarrative, generateOutreachEmail };
+// ── Scope Generation ─────────────────────────────────────────────────
+
+const PRICING = {
+  'no-https': { description: 'Install and configure SSL certificate', hours: 0.5, price: 75 },
+  'ssl-expired': { description: 'Renew SSL certificate', hours: 0.5, price: 75 },
+  'ssl-expiring': { description: 'Renew SSL certificate (expiring soon)', hours: 0.5, price: 75 },
+  'ssl-error': { description: 'Fix SSL certificate issue', hours: 0.5, price: 75 },
+  'no-https-redirect': { description: 'Configure HTTPS redirect', hours: 0.25, price: 50 },
+  'no-hsts': { description: 'Add HSTS security header', hours: 0.25, price: 50 },
+  'no-xcto': { description: 'Add X-Content-Type-Options header', hours: 0.15, price: 25 },
+  'no-xfo': { description: 'Add clickjacking protection', hours: 0.15, price: 25 },
+  'no-csp': { description: 'Configure Content Security Policy', hours: 0.5, price: 75 },
+  'no-referrer-policy': { description: 'Add Referrer Policy header', hours: 0.15, price: 25 },
+  'no-permissions-policy': { description: 'Add Permissions Policy header', hours: 0.15, price: 25 },
+  'wp-version-exposed': { description: 'Hide WordPress version', hours: 0.25, price: 50 },
+  'wp-xmlrpc': { description: 'Disable XML-RPC', hours: 0.25, price: 50 },
+  'wp-readme': { description: 'Remove WordPress readme', hours: 0.15, price: 25 },
+  'admin-exposed-wp-loginphp': { description: 'Harden WordPress login access', hours: 1, price: 150 },
+  'admin-exposed-wpadmin': { description: 'Harden WordPress admin access', hours: 1, price: 150 },
+  'admin-exposed-admin': { description: 'Harden admin panel access', hours: 1, price: 150 },
+  'admin-exposed-administrator': { description: 'Harden admin panel access', hours: 1, price: 150 },
+  'server-version': { description: 'Hide server version info', hours: 0.25, price: 50 },
+  'powered-by': { description: 'Remove X-Powered-By header', hours: 0.15, price: 25 },
+  'cookie-flags': { description: 'Add security flags to cookies', hours: 0.25, price: 50 },
+  'mixed-content': { description: 'Fix mixed content issues', hours: 0.5, price: 75 },
+  'outdated-jquery': { description: 'Update jQuery to current version', hours: 1, price: 100 },
+  'outdated-bootstrap': { description: 'Update Bootstrap to current version', hours: 1, price: 100 },
+};
+
+function generateScope(scan) {
+  const items = [];
+  for (const finding of (scan.findings || [])) {
+    const pricing = PRICING[finding.id];
+    if (pricing) {
+      items.push({
+        finding_id: finding.id,
+        description: pricing.description,
+        estimated_hours: pricing.hours,
+        price: pricing.price,
+        status: 'pending',
+      });
+    } else {
+      items.push({
+        finding_id: finding.id,
+        description: `Fix: ${finding.title}`,
+        estimated_hours: 0.5,
+        price: 75,
+        status: 'pending',
+      });
+    }
+  }
+  const totalPrice = items.reduce((sum, i) => sum + i.price, 0);
+  const tier = totalPrice > 1000 ? 'rebuild' : 'fix';
+  return { items, total_price: totalPrice, tier };
+}
+
+module.exports = { generateNarrative, generateOutreachEmail, generateScope };

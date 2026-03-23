@@ -18,6 +18,7 @@ app.use('/api/scan', require('./server/api/scan'));
 app.use('/api/reports', require('./server/api/reports'));
 app.use('/api/outreach', require('./server/api/outreach'));
 app.use('/api/discover', require('./server/api/discover'));
+app.use('/api/clients', require('./server/api/clients'));
 
 // Serve React frontend from app/dist if it exists
 const distPath = path.join(__dirname, 'app', 'dist');

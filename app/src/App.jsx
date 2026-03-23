@@ -5,9 +5,11 @@ import Pipeline from './components/Pipeline';
 import BatchActions from './components/BatchActions';
 import RegionPicker from './components/RegionPicker';
 import BusinessDetail from './components/BusinessDetail';
+import Onboarding from './components/Onboarding';
 import './App.css';
 
 export default function App() {
+  const [lane, setLane] = useState('pipeline');
   const [stats, setStats] = useState(null);
   const [businesses, setBusinesses] = useState([]);
   const [region, setRegion] = useState(null);
@@ -69,32 +71,56 @@ export default function App() {
     <div className="app">
       <nav className="top-nav">
         <div className="nav-brand">Operations</div>
-        <RegionPicker value={region} onSelect={handleRegionChange} />
-        <button
-          className="btn btn-discover"
-          onClick={handleDiscover}
-          disabled={discovering}
-        >
-          {discovering ? 'Discovering...' : 'Discover Businesses'}
-        </button>
+        <div className="lane-tabs">
+          <button
+            className={`lane-tab${lane === 'pipeline' ? ' lane-tab-active' : ''}`}
+            onClick={() => setLane('pipeline')}
+          >
+            Pipeline
+          </button>
+          <button
+            className={`lane-tab${lane === 'onboarding' ? ' lane-tab-active' : ''}`}
+            onClick={() => setLane('onboarding')}
+          >
+            Onboarding
+          </button>
+        </div>
+        {lane === 'pipeline' && (
+          <>
+            <RegionPicker value={region} onSelect={handleRegionChange} />
+            <button
+              className="btn btn-discover"
+              onClick={handleDiscover}
+              disabled={discovering}
+            >
+              {discovering ? 'Discovering...' : 'Discover Businesses'}
+            </button>
+          </>
+        )}
       </nav>
 
-      <StatsBar stats={stats} />
-      <BatchActions businesses={businesses} onRefresh={handleRefresh} />
+      {lane === 'pipeline' && (
+        <>
+          <StatsBar stats={stats} />
+          <BatchActions businesses={businesses} onRefresh={handleRefresh} />
 
-      {loading ? (
-        <div className="app-loading">Loading pipeline...</div>
-      ) : (
-        <Pipeline businesses={businesses} onSelect={handleSelectBusiness} />
+          {loading ? (
+            <div className="app-loading">Loading pipeline...</div>
+          ) : (
+            <Pipeline businesses={businesses} onSelect={handleSelectBusiness} />
+          )}
+
+          {selectedId && (
+            <BusinessDetail
+              businessId={selectedId}
+              onClose={handleCloseDetail}
+              onRefresh={handleRefresh}
+            />
+          )}
+        </>
       )}
 
-      {selectedId && (
-        <BusinessDetail
-          businessId={selectedId}
-          onClose={handleCloseDetail}
-          onRefresh={handleRefresh}
-        />
-      )}
+      {lane === 'onboarding' && <Onboarding />}
     </div>
   );
 }

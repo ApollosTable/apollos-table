@@ -509,6 +509,237 @@ a:hover {
   text-transform: uppercase;
 }
 
+/* --- Lane Tabs --- */
+.lane-tabs {
+  display: flex;
+  gap: 2px;
+  background: #0f0f22;
+  border-radius: 4px;
+  padding: 2px;
+}
+
+.lane-tab {
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  background: transparent;
+  color: #666;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.lane-tab:hover {
+  color: #aaa;
+}
+.lane-tab-active {
+  background: rgba(0, 212, 255, 0.1);
+  color: #00d4ff;
+}
+
+/* --- Onboarding --- */
+.onboarding {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  flex: 1;
+}
+
+.onboarding-section-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #aaa;
+  margin: 0 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #1a1a2e;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.onboarding-count {
+  font-size: 12px;
+  font-weight: 700;
+  color: #00d4ff;
+  background: rgba(0, 212, 255, 0.08);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.onboarding-empty {
+  color: #555;
+  font-size: 13px;
+  padding: 20px 0;
+}
+
+.onboarding-leads {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* --- Lead Card --- */
+.lead-card {
+  background: #0a0a1a;
+  border: 1px solid #1a1a2e;
+  border-radius: 6px;
+  padding: 16px;
+  transition: box-shadow 0.3s;
+}
+.lead-card:hover {
+  box-shadow: 0 0 16px rgba(0, 212, 255, 0.08);
+}
+
+.lead-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.lead-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lead-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+.lead-meta {
+  display: flex;
+  gap: 10px;
+  font-size: 12px;
+  color: #777;
+}
+
+.lead-score {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.lead-grade {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.lead-score-num {
+  font-size: 11px;
+  color: #00d4ff;
+  opacity: 0.7;
+}
+
+/* --- Scope Panel --- */
+.scope-panel {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #1a1a2e;
+}
+
+.scope-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.scope-tier {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #050510;
+  background: #00d4ff;
+  padding: 2px 10px;
+  border-radius: 3px;
+}
+
+.scope-total {
+  font-size: 20px;
+  font-weight: 700;
+  color: #00d4ff;
+}
+
+.scope-items {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.scope-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.scope-item-desc {
+  color: #ccc;
+}
+
+.scope-item-price {
+  color: #00d4ff;
+  font-weight: 600;
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+
+.convert-btn {
+  width: 100%;
+  margin-top: 4px;
+}
+
+/* --- Client Card --- */
+.onboarding-clients {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.client-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #0a0a1a;
+  border: 1px solid #1a1a2e;
+  border-radius: 6px;
+  padding: 12px 16px;
+}
+
+.client-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+.client-status {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #00d4ff;
+  background: rgba(0, 212, 255, 0.08);
+  padding: 3px 10px;
+  border-radius: 3px;
+}
+
 /* --- Responsive --- */
 @media (max-width: 768px) {
   .stats-bar {
@@ -534,5 +765,8 @@ a:hover {
   }
   .top-nav {
     padding: 0 16px;
+  }
+  .onboarding {
+    padding: 16px;
   }
 }
