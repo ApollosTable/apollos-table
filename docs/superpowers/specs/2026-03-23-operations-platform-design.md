@@ -287,6 +287,9 @@ The existing SQLite schema covers businesses, scans, reports, and outreach. We n
 
 Note: Use `business_id` as the single FK. For client interactions, join through `clients.business_id`. This avoids ambiguity from competing foreign keys.
 
+**job_runs** — Background job execution log
+- id, job_name, started_at, completed_at, result, error
+
 **scheduled_scans** — Recurring scan configuration for monitoring clients
 - id, client_id (FK), frequency (weekly/monthly), last_run, next_run
 - baseline_scan_id (FK to scans — the "healthy" reference point)
