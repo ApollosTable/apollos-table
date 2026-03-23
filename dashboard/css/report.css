@@ -1,0 +1,327 @@
+/* ============================================
+   Apollo's Table — Public Report Styles
+   Professional, clean, builds trust
+   ============================================ */
+
+:root {
+  --bg: #0c0c14;
+  --bg-card: #13131d;
+  --bg-card-alt: #181824;
+  --border: #252536;
+  --gold: #d4a44c;
+  --gold-dim: rgba(212, 164, 76, 0.15);
+  --green: #3ecf6e;
+  --green-dim: rgba(62, 207, 110, 0.12);
+  --red: #e05252;
+  --red-dim: rgba(224, 82, 82, 0.12);
+  --amber: #e8a832;
+  --amber-dim: rgba(232, 168, 50, 0.12);
+  --blue: #5b8def;
+  --text: #e8e6e1;
+  --text-secondary: #8a8894;
+  --text-muted: #5a5868;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --radius: 8px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 15px; -webkit-font-smoothing: antialiased; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.report-wrapper {
+  max-width: 740px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* -- Loading -- */
+.report-loading {
+  text-align: center;
+  padding: 6rem 2rem;
+  color: var(--text-muted);
+}
+.loading-icon { font-size: 3rem; margin-bottom: 1rem; }
+
+/* -- Error -- */
+.report-error {
+  text-align: center;
+  padding: 6rem 2rem;
+  color: var(--text-muted);
+}
+.report-error h2 { color: var(--text); margin-bottom: 0.5rem; }
+
+/* -- Header -- */
+.report-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.report-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: var(--gold-dim);
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  margin-bottom: 1rem;
+}
+
+.report-header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.3rem;
+}
+
+.report-header .report-url {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.report-date {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
+
+/* -- Score Section -- */
+.score-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+  padding: 2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.score-ring {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+.score-ring svg {
+  width: 120px;
+  height: 120px;
+  transform: rotate(-90deg);
+}
+
+.score-ring .ring-bg {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 8;
+}
+
+.score-ring .ring-fill {
+  fill: none;
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s ease;
+}
+
+.score-ring .score-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.score-number {
+  font-size: 2rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  line-height: 1;
+}
+
+.score-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.grade-display {
+  text-align: center;
+}
+
+.grade-letter {
+  font-size: 4rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  line-height: 1;
+}
+
+.grade-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 0.3rem;
+}
+
+.grade-a { color: var(--green); }
+.grade-b { color: #7bc87b; }
+.grade-c { color: var(--amber); }
+.grade-d { color: #e07840; }
+.grade-f { color: var(--red); }
+
+/* -- Narrative -- */
+.narrative-section {
+  margin-bottom: 2.5rem;
+  padding: 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.narrative-section h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--gold);
+}
+
+.narrative-section p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 0.8rem;
+}
+
+.narrative-section p:last-child { margin-bottom: 0; }
+
+/* -- Findings -- */
+.findings-section {
+  margin-bottom: 2.5rem;
+}
+
+.findings-section h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.finding-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.6rem;
+  border-left: 3px solid var(--border);
+}
+
+.finding-card.critical { border-left-color: var(--red); }
+.finding-card.high { border-left-color: #e07840; }
+.finding-card.medium { border-left-color: var(--amber); }
+.finding-card.low { border-left-color: var(--blue); }
+
+.finding-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.4rem;
+}
+
+.finding-severity {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.finding-severity.critical { background: var(--red-dim); color: var(--red); }
+.finding-severity.high { background: rgba(224, 120, 64, 0.12); color: #e07840; }
+.finding-severity.medium { background: var(--amber-dim); color: var(--amber); }
+.finding-severity.low { background: rgba(91, 141, 239, 0.12); color: var(--blue); }
+
+.finding-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.finding-detail {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* -- CTA -- */
+.cta-section {
+  text-align: center;
+  padding: 2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--gold-dim);
+  border-radius: var(--radius);
+  margin-bottom: 2rem;
+}
+
+.cta-section h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.cta-section p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.25rem;
+}
+
+.cta-contact {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.cta-item {
+  font-size: 0.9rem;
+  color: var(--gold);
+  font-weight: 500;
+}
+
+.cta-item a {
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.cta-item a:hover { text-decoration: underline; }
+
+/* -- Footer -- */
+.report-footer {
+  text-align: center;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* -- Responsive -- */
+@media (max-width: 600px) {
+  .report-wrapper { padding: 1rem; }
+  .score-section { flex-direction: column; gap: 1rem; padding: 1.25rem; }
+  .report-header h1 { font-size: 1.4rem; }
+  .grade-letter { font-size: 3rem; }
+}

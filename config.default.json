@@ -2,40 +2,41 @@
   "location": {
     "city": "Milford",
     "state": "NH",
-    "latitude": 42.8354,
-    "longitude": -71.6487
+    "zip": "03055",
+    "radius_miles": 25
   },
   "scanner": {
-    "interval_minutes": 15,
-    "max_price": 25,
-    "search_queries": ["free", "moving must go", "curb alert", "free stuff", "garage cleanout"],
-    "keyword_blacklist": ["baby clothes", "broken", "parts only", "needs repair", "for parts"]
+    "timeout_ms": 10000,
+    "concurrent_scans": 3,
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
   },
-  "evaluator": {
-    "min_profit": 30,
-    "min_profit_per_mile": 3,
-    "comp_lookback_days": 90,
-    "min_comps": 3
-  },
-  "radius": {
-    "grade_a_miles": 30,
-    "grade_b_miles": 20,
-    "grade_c_miles": 10
-  },
-  "ebay": {
-    "final_value_fee_rate": 0.1305,
-    "payment_processing_rate": 0.0295,
-    "payment_processing_flat": 0.30,
-    "gas_cost_per_mile": 0.67
-  },
-  "alerts": {
-    "desktop": true,
-    "email": false
-  },
-  "shipping_estimates": {
-    "under_10lb": 13,
-    "10_30lb": 27,
-    "30_70lb": 50,
-    "70lb_plus": 75
+  "categories": [
+    "plumber",
+    "electrician",
+    "hvac",
+    "roofing",
+    "landscaping",
+    "auto repair",
+    "painting",
+    "construction",
+    "fencing",
+    "excavation",
+    "masonry",
+    "welding",
+    "tree service",
+    "septic",
+    "paving",
+    "handyman",
+    "carpentry",
+    "flooring",
+    "siding",
+    "gutters"
+  ],
+  "contact": {
+    "name": "Blake Corbit",
+    "title": "Website Security Consultant",
+    "email": "",
+    "phone": "",
+    "website": "apollostable.com"
   }
 }

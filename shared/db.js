@@ -1,156 +1,260 @@
-// shared/db.js
 const Database = require('better-sqlite3');
 const path = require('path');
 
-const DEFAULT_PATH = path.join(__dirname, '..', 'apollo.db');
-let _db = null;
+const DB_PATH = path.join(__dirname, '..', 'apollo.db');
+let db;
 
-function init(dbPath) {
-  _db = new Database(dbPath || DEFAULT_PATH);
-  _db.pragma('journal_mode = WAL');
-  _db.pragma('foreign_keys = ON');
-  createTables();
-  return _db;
+function getDb() {
+  if (!db) {
+    db = new Database(DB_PATH);
+    db.pragma('journal_mode = WAL');
+    db.pragma('foreign_keys = ON');
+    migrate();
+  }
+  return db;
 }
 
-function createTables() {
-  _db.exec(`
-    CREATE TABLE IF NOT EXISTS raw_listings (
+function migrate() {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS businesses (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      url TEXT UNIQUE NOT NULL,
-      title TEXT NOT NULL,
-      price REAL DEFAULT 0,
-      description TEXT DEFAULT '',
-      images TEXT DEFAULT '[]',
-      image_hash TEXT,
-      location TEXT DEFAULT '',
-      latitude REAL,
-      longitude REAL,
-      distance_miles REAL,
-      posted_at TEXT,
-      found_at TEXT,
-      last_checked TEXT,
-      status TEXT DEFAULT 'pending_eval'
-    );
-
-    CREATE TABLE IF NOT EXISTS evaluations (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      listing_id INTEGER NOT NULL REFERENCES raw_listings(id),
-      item_type TEXT,
-      brand TEXT,
-      model TEXT,
-      condition TEXT,
-      weight_class TEXT,
-      ebay_search_query TEXT,
-      ebay_median_price REAL,
-      ebay_sold_count INTEGER,
-      ebay_avg_days_to_sell REAL,
-      shipping_estimate REAL,
-      ebay_fees REAL,
-      gas_cost REAL,
-      net_profit REAL,
-      profit_per_mile REAL,
-      grade TEXT,
-      sell_channel TEXT,
-      evaluated_at TEXT DEFAULT (datetime('now')),
-      notes TEXT
-    );
-
-    CREATE TABLE IF NOT EXISTS inventory (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      listing_id INTEGER REFERENCES raw_listings(id),
-      evaluation_id INTEGER REFERENCES evaluations(id),
-      status TEXT DEFAULT 'targeted',
-      purchase_price REAL DEFAULT 0,
-      photos TEXT DEFAULT '[]',
-      ebay_listing_id TEXT,
-      listed_price REAL,
-      sold_price REAL,
-      shipping_actual REAL,
-      ebay_fees_actual REAL,
-      net_profit_actual REAL,
-      notes TEXT,
+      name TEXT NOT NULL,
+      slug TEXT UNIQUE NOT NULL,
+      url TEXT NOT NULL,
+      category TEXT,
+      address TEXT,
+      city TEXT,
+      phone TEXT,
+      email TEXT,
+      source TEXT DEFAULT 'manual',
       created_at TEXT DEFAULT (datetime('now')),
       updated_at TEXT DEFAULT (datetime('now'))
     );
+
+    CREATE TABLE IF NOT EXISTS scans (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      business_id INTEGER NOT NULL,
+      score INTEGER,
+      grade TEXT,
+      findings TEXT,
+      raw_headers TEXT,
+      scanned_at TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY (business_id) REFERENCES businesses(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS reports (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      business_id INTEGER NOT NULL,
+      scan_id INTEGER NOT NULL,
+      narrative TEXT,
+      published INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY (business_id) REFERENCES businesses(id),
+      FOREIGN KEY (scan_id) REFERENCES scans(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS outreach (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      business_id INTEGER NOT NULL,
+      method TEXT DEFAULT 'email',
+      status TEXT DEFAULT 'pending',
+      sent_at TEXT,
+      responded_at TEXT,
+      notes TEXT,
+      FOREIGN KEY (business_id) REFERENCES businesses(id)
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_businesses_slug ON businesses(slug);
+    CREATE INDEX IF NOT EXISTS idx_scans_business ON scans(business_id);
+    CREATE INDEX IF NOT EXISTS idx_reports_business ON reports(business_id);
   `);
 }
 
-function insertListing(data) {
-  const stmt = _db.prepare(`
-    INSERT INTO raw_listings (url, title, price, description, images, image_hash, location, latitude, longitude, distance_miles, posted_at, found_at)
-    VALUES (@url, @title, @price, @description, @images, @image_hash, @location, @latitude, @longitude, @distance_miles, @posted_at, @found_at)
+// -- Business operations --
+
+function slugify(name) {
+  return name.toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 80);
+}
+
+function addBusiness({ name, url, category, address, city, phone, email, source }) {
+  const db = getDb();
+  let slug = slugify(name);
+
+  // Handle duplicates
+  const existing = db.prepare('SELECT slug FROM businesses WHERE slug = ?').get(slug);
+  if (existing) {
+    slug = slug + '-' + Date.now().toString(36).slice(-4);
+  }
+
+  const stmt = db.prepare(`
+    INSERT INTO businesses (name, slug, url, category, address, city, phone, email, source)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
-  return stmt.run({
-    image_hash: null, latitude: null, longitude: null,
-    ...data
-  }).lastInsertRowid;
+  const result = stmt.run(name, slug, url, category || null, address || null, city || null, phone || null, email || null, source || 'manual');
+  return { id: result.lastInsertRowid, slug };
 }
 
-function getListing(id) {
-  return _db.prepare('SELECT * FROM raw_listings WHERE id = ?').get(id);
+function getBusiness(idOrSlug) {
+  const db = getDb();
+  if (typeof idOrSlug === 'number') {
+    return db.prepare('SELECT * FROM businesses WHERE id = ?').get(idOrSlug);
+  }
+  return db.prepare('SELECT * FROM businesses WHERE slug = ?').get(idOrSlug);
 }
 
-function getListingByUrl(url) {
-  return _db.prepare('SELECT * FROM raw_listings WHERE url = ?').get(url);
+function listBusinesses({ category, hasScans, limit } = {}) {
+  const db = getDb();
+  let sql = 'SELECT b.*, s.score, s.grade, s.scanned_at AS last_scanned FROM businesses b LEFT JOIN scans s ON s.id = (SELECT id FROM scans WHERE business_id = b.id ORDER BY scanned_at DESC LIMIT 1)';
+  const conditions = [];
+  const params = [];
+
+  if (category) {
+    conditions.push('b.category = ?');
+    params.push(category);
+  }
+  if (hasScans === true) {
+    conditions.push('s.id IS NOT NULL');
+  } else if (hasScans === false) {
+    conditions.push('s.id IS NULL');
+  }
+
+  if (conditions.length) sql += ' WHERE ' + conditions.join(' AND ');
+  sql += ' ORDER BY b.created_at DESC';
+  if (limit) {
+    sql += ' LIMIT ?';
+    params.push(limit);
+  }
+
+  return db.prepare(sql).all(...params);
 }
 
-function getPendingListings() {
-  return _db.prepare("SELECT * FROM raw_listings WHERE status = 'pending_eval' ORDER BY found_at DESC").all();
-}
+// -- Scan operations --
 
-function updateListingStatus(id, status) {
-  _db.prepare("UPDATE raw_listings SET status = ?, last_checked = datetime('now') WHERE id = ?").run(status, id);
-}
-
-function insertEvaluation(data) {
-  const stmt = _db.prepare(`
-    INSERT INTO evaluations (listing_id, item_type, brand, model, condition, weight_class, ebay_search_query,
-      ebay_median_price, ebay_sold_count, ebay_avg_days_to_sell, shipping_estimate, ebay_fees, gas_cost,
-      net_profit, profit_per_mile, grade, sell_channel, notes)
-    VALUES (@listing_id, @item_type, @brand, @model, @condition, @weight_class, @ebay_search_query,
-      @ebay_median_price, @ebay_sold_count, @ebay_avg_days_to_sell, @shipping_estimate, @ebay_fees, @gas_cost,
-      @net_profit, @profit_per_mile, @grade, @sell_channel, @notes)
+function saveScan(businessId, { score, grade, findings, rawHeaders }) {
+  const db = getDb();
+  const stmt = db.prepare(`
+    INSERT INTO scans (business_id, score, grade, findings, raw_headers)
+    VALUES (?, ?, ?, ?, ?)
   `);
-  return stmt.run(data).lastInsertRowid;
+  const result = stmt.run(businessId, score, grade, JSON.stringify(findings), JSON.stringify(rawHeaders || {}));
+  db.prepare('UPDATE businesses SET updated_at = datetime(\'now\') WHERE id = ?').run(businessId);
+  return result.lastInsertRowid;
 }
 
-function getTopDeals(limit = 20) {
-  return _db.prepare(`
-    SELECT e.*, l.title, l.url, l.price, l.images, l.location, l.distance_miles
-    FROM evaluations e
-    JOIN raw_listings l ON e.listing_id = l.id
-    WHERE e.grade IN ('A', 'B')
-    ORDER BY e.profit_per_mile DESC
-    LIMIT ?
-  `).all(limit);
+function getLatestScan(businessId) {
+  const db = getDb();
+  const scan = db.prepare('SELECT * FROM scans WHERE business_id = ? ORDER BY scanned_at DESC LIMIT 1').get(businessId);
+  if (scan && scan.findings) scan.findings = JSON.parse(scan.findings);
+  if (scan && scan.raw_headers) scan.raw_headers = JSON.parse(scan.raw_headers);
+  return scan;
 }
 
-function urlExists(url) {
-  return !!_db.prepare('SELECT 1 FROM raw_listings WHERE url = ?').get(url);
+// -- Report operations --
+
+function saveReport(businessId, scanId, narrative) {
+  const db = getDb();
+  const stmt = db.prepare(`
+    INSERT INTO reports (business_id, scan_id, narrative)
+    VALUES (?, ?, ?)
+  `);
+  return stmt.run(businessId, scanId, narrative).lastInsertRowid;
 }
 
-function grabDeal(listingId) {
-  const listing = getListing(listingId);
-  if (!listing) throw new Error(`Listing ${listingId} not found`);
-  const evalRow = _db.prepare('SELECT * FROM evaluations WHERE listing_id = ? ORDER BY id DESC LIMIT 1').get(listingId);
-  const invId = _db.prepare(`
-    INSERT INTO inventory (listing_id, evaluation_id, status, purchase_price)
-    VALUES (?, ?, 'targeted', ?)
-  `).run(listingId, evalRow ? evalRow.id : null, listing.price).lastInsertRowid;
-  updateListingStatus(listingId, 'grabbed');
-  return invId;
+function getLatestReport(businessId) {
+  const db = getDb();
+  return db.prepare('SELECT * FROM reports WHERE business_id = ? ORDER BY created_at DESC LIMIT 1').get(businessId);
 }
 
-function raw() { return _db; }
+function publishReport(reportId) {
+  const db = getDb();
+  db.prepare('UPDATE reports SET published = 1 WHERE id = ?').run(reportId);
+}
+
+// -- Outreach operations --
+
+function saveOutreach(businessId, { method, status, notes }) {
+  const db = getDb();
+  const stmt = db.prepare(`
+    INSERT INTO outreach (business_id, method, status, notes)
+    VALUES (?, ?, ?, ?)
+  `);
+  return stmt.run(businessId, method || 'email', status || 'pending', notes || null).lastInsertRowid;
+}
+
+function updateOutreach(id, updates) {
+  const db = getDb();
+  const fields = [];
+  const params = [];
+  for (const [key, val] of Object.entries(updates)) {
+    fields.push(`${key} = ?`);
+    params.push(val);
+  }
+  params.push(id);
+  db.prepare(`UPDATE outreach SET ${fields.join(', ')} WHERE id = ?`).run(...params);
+}
+
+// -- Stats --
+
+function getStats() {
+  const db = getDb();
+  const total = db.prepare('SELECT COUNT(*) as count FROM businesses').get().count;
+  const scanned = db.prepare('SELECT COUNT(DISTINCT business_id) as count FROM scans').get().count;
+  const reported = db.prepare('SELECT COUNT(DISTINCT business_id) as count FROM reports WHERE published = 1').get().count;
+  const grades = db.prepare(`
+    SELECT s.grade, COUNT(*) as count
+    FROM scans s
+    INNER JOIN (SELECT business_id, MAX(scanned_at) as max_date FROM scans GROUP BY business_id) latest
+      ON s.business_id = latest.business_id AND s.scanned_at = latest.max_date
+    GROUP BY s.grade
+  `).all();
+  const outreachSent = db.prepare("SELECT COUNT(*) as count FROM outreach WHERE status != 'pending'").get().count;
+  const responses = db.prepare("SELECT COUNT(*) as count FROM outreach WHERE responded_at IS NOT NULL").get().count;
+
+  return { total, scanned, reported, outreachSent, responses, grades };
+}
+
+// -- Pipeline view --
+
+function getPipeline() {
+  const db = getDb();
+  return db.prepare(`
+    SELECT
+      b.*,
+      s.score,
+      s.grade,
+      s.scanned_at AS last_scanned,
+      r.id AS report_id,
+      r.published,
+      o.status AS outreach_status,
+      o.sent_at AS outreach_sent,
+      o.responded_at AS outreach_responded,
+      CASE
+        WHEN o.responded_at IS NOT NULL THEN 'responded'
+        WHEN o.sent_at IS NOT NULL THEN 'outreach_sent'
+        WHEN r.published = 1 THEN 'report_ready'
+        WHEN r.id IS NOT NULL THEN 'report_draft'
+        WHEN s.id IS NOT NULL THEN 'scanned'
+        ELSE 'discovered'
+      END AS pipeline_stage
+    FROM businesses b
+    LEFT JOIN scans s ON s.id = (SELECT id FROM scans WHERE business_id = b.id ORDER BY scanned_at DESC LIMIT 1)
+    LEFT JOIN reports r ON r.id = (SELECT id FROM reports WHERE business_id = b.id ORDER BY created_at DESC LIMIT 1)
+    LEFT JOIN outreach o ON o.id = (SELECT id FROM outreach WHERE business_id = b.id ORDER BY id DESC LIMIT 1)
+    ORDER BY b.updated_at DESC
+  `).all();
+}
 
 function close() {
-  if (_db) _db.close();
-  _db = null;
+  if (db) db.close();
 }
 
 module.exports = {
-  init, insertListing, getListing, getListingByUrl, getPendingListings,
-  updateListingStatus, insertEvaluation, getTopDeals, urlExists, grabDeal,
-  raw, close
+  getDb, addBusiness, getBusiness, listBusinesses, slugify,
+  saveScan, getLatestScan,
+  saveReport, getLatestReport, publishReport,
+  saveOutreach, updateOutreach,
+  getStats, getPipeline, close
 };

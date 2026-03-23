@@ -1,16 +1,16 @@
 {
   "name": "apollos-table",
-  "version": "0.1.0",
-  "description": "Automated resale deal sniper — FB Marketplace to eBay",
+  "version": "1.0.0",
+  "description": "Website security scanner & report generator for local businesses",
   "main": "cli.js",
   "bin": {
     "apollo": "./cli.js"
   },
   "scripts": {
-    "test": "mocha --recursive test/**/*.test.js",
     "scan": "node cli.js scan",
-    "eval": "node cli.js eval",
-    "deals": "node cli.js deals"
+    "discover": "node cli.js discover",
+    "report": "node cli.js report",
+    "export": "node cli.js export"
   },
   "author": "Blake Corbit",
   "license": "MIT",
@@ -19,14 +19,7 @@
     "better-sqlite3": "^12.8.0",
     "commander": "^14.0.3",
     "dotenv": "^17.3.1",
-    "node-notifier": "^10.0.1",
-    "nodemailer": "^8.0.3",
-    "puppeteer": "^24.40.0",
-    "puppeteer-extra": "^3.3.6",
-    "puppeteer-extra-plugin-stealth": "^2.11.2"
-  },
-  "devDependencies": {
-    "chai": "^6.2.2",
-    "mocha": "^11.7.5"
+    "node-html-parser": "^7.0.1",
+    "nodemailer": "^8.0.3"
   }
 }
