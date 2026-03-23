@@ -1098,6 +1098,14 @@ img {
   white-space: nowrap;
 }
 
+/* Prefs hint text */
+.pref-hint {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+
 /* Prefs slider row */
 .pref-slider-row {
   display: flex;

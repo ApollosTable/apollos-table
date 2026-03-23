@@ -235,51 +235,37 @@
 
   function initPrefsPanel() {
     var zip = document.getElementById('pref-zip');
-    var radius = document.getElementById('pref-radius');
     var invest = document.getElementById('pref-invest');
     var profit = document.getElementById('pref-profit');
     var grade = document.getElementById('pref-grade');
     var shippable = document.getElementById('pref-shippable');
-    var saveBtn = document.getElementById('pref-save');
-    var msg = document.getElementById('pref-msg');
-
-    if (!saveBtn) return;
 
     var p = loadPrefs();
     if (zip && p.zip) zip.value = p.zip;
-    if (radius) { radius.value = p.radius || 30; setText('pref-radius-val', (p.radius || 30) + ' mi'); }
-    if (invest) { invest.value = p.invest || 50; setText('pref-invest-val', currency(p.invest || 50)); }
-    if (profit) { profit.value = p.profit || 25; setText('pref-profit-val', currency(p.profit || 25)); }
+    if (invest) { invest.value = p.invest != null ? p.invest : 50; setText('pref-invest-val', currency(p.invest != null ? p.invest : 50)); }
+    if (profit) { profit.value = p.profit != null ? p.profit : 25; setText('pref-profit-val', currency(p.profit != null ? p.profit : 25)); }
     if (grade && p.grade) grade.value = p.grade;
     if (shippable && p.shippable) shippable.checked = true;
 
-    function updateLabels() {
-      if (radius) setText('pref-radius-val', radius.value + ' mi');
+    function syncAndFilter() {
       if (invest) setText('pref-invest-val', currency(Number(invest.value)));
       if (profit) setText('pref-profit-val', currency(Number(profit.value)));
-    }
-    if (radius) radius.addEventListener('input', updateLabels);
-    if (invest) invest.addEventListener('input', updateLabels);
-    if (profit) profit.addEventListener('input', updateLabels);
-
-    saveBtn.addEventListener('click', function () {
       var prefs = {
         zip: zip ? zip.value.trim() : '',
-        radius: radius ? Number(radius.value) : 30,
-        invest: invest ? Number(invest.value) : 50,
-        profit: profit ? Number(profit.value) : 25,
+        invest: invest ? Number(invest.value) : 200,
+        profit: profit ? Number(profit.value) : 0,
         grade: grade ? grade.value : 'all',
         shippable: shippable ? shippable.checked : false
       };
       savePrefs(prefs);
-      if (msg) {
-        msg.textContent = 'Saved — refreshing deals';
-        msg.style.color = 'var(--green)';
-        setTimeout(function () { msg.textContent = ''; }, 2000);
-      }
-      // Re-filter deals with new prefs
       if (window._apolloRefilter) window._apolloRefilter();
-    });
+    }
+
+    if (invest) invest.addEventListener('input', syncAndFilter);
+    if (profit) profit.addEventListener('input', syncAndFilter);
+    if (grade) grade.addEventListener('change', syncAndFilter);
+    if (shippable) shippable.addEventListener('change', syncAndFilter);
+    if (zip) zip.addEventListener('change', syncAndFilter);
   }
 
   function initFilters(allDeals, container) {
@@ -289,32 +275,36 @@
     function applyFilters() {
       var p = loadPrefs();
       var minGrade = p.grade || 'all';
-      var minProfit = p.profit || 0;
-      var maxInvest = p.invest || 9999;
+      var minProfit = p.profit != null ? p.profit : 0;
+      var maxInvest = p.invest != null ? p.invest : 200;
       var shippableOnly = p.shippable || false;
 
       var gradeOrder = ['A', 'B', 'C', 'F'];
 
       var filtered = allDeals.filter(function (d) {
+        // Grade filter: A = only A, B = A+B, C = A+B+C
         if (minGrade !== 'all') {
           var dealIdx = gradeOrder.indexOf((d.grade || 'F').toUpperCase());
           var minIdx = gradeOrder.indexOf(minGrade.toUpperCase());
           if (dealIdx > minIdx) return false;
         }
+        // Profit: only show deals worth at least this much
         if ((d.estimated_profit || 0) < minProfit) return false;
+        // Investment: hide deals that cost more than you'll spend
         if ((d.price || 0) > maxInvest) return false;
+        // Shippable: only eBay channel
         if (shippableOnly && (d.sell_channel || '').toLowerCase() !== 'ebay') return false;
         return true;
       });
 
-      // Render filter tags
       if (tagsEl) {
         var tags = [];
         if (minGrade !== 'all') tags.push('Grade ' + minGrade + '+');
-        if (maxInvest < 9999) tags.push('Max ' + currency(maxInvest));
+        if (maxInvest < 200) tags.push('Spend up to ' + currency(maxInvest));
         if (minProfit > 0) tags.push(currency(minProfit) + '+ profit');
-        if (shippableOnly) tags.push('eBay shippable');
+        if (shippableOnly) tags.push('Shippable');
         if (p.zip) tags.push(p.zip);
+        if (tags.length === 0) tags.push('All deals');
         tagsEl.innerHTML = tags.map(function (t) { return '<span class="filter-tag">' + t + '</span>'; }).join('');
       }
 

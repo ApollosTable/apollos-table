@@ -47,43 +47,36 @@
       <div class="settings-group">
         <label for="pref-zip">Your Zip Code</label>
         <input type="text" id="pref-zip" placeholder="80204" maxlength="5" autocomplete="postal-code">
+        <span class="pref-hint">Deals are scanned from Denver metro area</span>
       </div>
       <div class="settings-group">
-        <label for="pref-radius">Max Pickup Radius</label>
+        <label for="pref-invest">Max I'll Spend (Ask Price)</label>
         <div class="pref-slider-row">
-          <input type="range" id="pref-radius" min="5" max="100" value="30" step="5">
-          <span id="pref-radius-val" class="pref-val">30 mi</span>
-        </div>
-      </div>
-      <div class="settings-group">
-        <label for="pref-invest">Max Investment</label>
-        <div class="pref-slider-row">
-          <input type="range" id="pref-invest" min="0" max="500" value="50" step="5">
+          <input type="range" id="pref-invest" min="0" max="200" value="50" step="5">
           <span id="pref-invest-val" class="pref-val">$50</span>
         </div>
+        <span class="pref-hint">Hide deals that cost more than this to buy</span>
       </div>
       <div class="settings-group">
-        <label for="pref-profit">Min Profit</label>
+        <label for="pref-profit">Min Profit to Show</label>
         <div class="pref-slider-row">
           <input type="range" id="pref-profit" min="0" max="500" value="25" step="5">
           <span id="pref-profit-val" class="pref-val">$25</span>
         </div>
+        <span class="pref-hint">Only show deals worth at least this much</span>
       </div>
       <div class="settings-group">
-        <label for="pref-grade">Min Grade</label>
+        <label for="pref-grade">Deal Quality</label>
         <select id="pref-grade">
-          <option value="all">Show All</option>
-          <option value="A">A Only</option>
+          <option value="all">All Grades</option>
+          <option value="A">A Only (best)</option>
           <option value="B">A + B</option>
           <option value="C">A + B + C</option>
         </select>
       </div>
       <div class="settings-group">
         <label><input type="checkbox" id="pref-shippable"> eBay Shippable Only</label>
-      </div>
-      <div class="settings-group">
-        <button id="pref-save" class="btn-save">Save Preferences</button>
-        <div id="pref-msg" class="settings-msg"></div>
+        <span class="pref-hint">Hide bulky items (hot tubs, trailers, etc.)</span>
       </div>
       <hr class="settings-divider">
       <h3>Account</h3>
