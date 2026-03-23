@@ -201,7 +201,6 @@
       });
 
       initFilters(deals, container);
-      renderDeals(deals, container);
     });
   }
 
@@ -276,9 +275,8 @@
     if (investSlider) investSlider.addEventListener('input', applyFilters);
     if (shippableCheck) shippableCheck.addEventListener('change', applyFilters);
 
-    if (profitVal) profitVal.textContent = currency(0);
-    if (investVal) investVal.textContent = currency(investSlider ? Number(investSlider.max) : 100);
-    if (countEl) countEl.textContent = allDeals.length + ' deal' + (allDeals.length !== 1 ? 's' : '');
+    // Run filters immediately on load
+    applyFilters();
   }
 
   function renderDeals(deals, container) {
