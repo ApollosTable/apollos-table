@@ -13,6 +13,7 @@ export default function App() {
   const [region, setRegion] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [discovering, setDiscovering] = useState(false);
 
   const loadData = useCallback(async () => {
     try {
@@ -52,11 +53,30 @@ export default function App() {
     setSelectedId(null);
   }, []);
 
+  const handleDiscover = useCallback(async () => {
+    setDiscovering(true);
+    try {
+      await api.discover(region);
+      await loadData();
+    } catch (err) {
+      console.error('Discovery failed:', err);
+    } finally {
+      setDiscovering(false);
+    }
+  }, [region, loadData]);
+
   return (
     <div className="app">
       <nav className="top-nav">
         <div className="nav-brand">Operations</div>
         <RegionPicker value={region} onSelect={handleRegionChange} />
+        <button
+          className="btn btn-discover"
+          onClick={handleDiscover}
+          disabled={discovering}
+        >
+          {discovering ? 'Discovering...' : 'Discover Businesses'}
+        </button>
       </nav>
 
       <StatsBar stats={stats} />
