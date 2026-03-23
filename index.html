@@ -95,14 +95,19 @@
           </select>
         </div>
         <div class="filter-group">
+          <label for="filter-max-invest">Max Investment</label>
+          <input type="range" id="filter-max-invest" min="0" max="100" value="100" step="5">
+          <span class="filter-value" id="filter-max-invest-val">$100</span>
+        </div>
+        <div class="filter-group">
           <label for="filter-profit">Min Profit</label>
           <input type="range" id="filter-profit" min="0" max="500" value="0" step="10">
           <span class="filter-value" id="filter-profit-val">$0</span>
         </div>
         <div class="filter-group">
-          <label for="filter-distance">Max Distance</label>
-          <input type="range" id="filter-distance" min="0" max="100" value="100" step="5">
-          <span class="filter-value" id="filter-distance-val">100 mi</span>
+          <label for="filter-shippable">
+            <input type="checkbox" id="filter-shippable"> eBay Shippable Only
+          </label>
         </div>
         <div class="filter-spacer"></div>
         <div class="filter-count" id="filter-count">0 deals</div>

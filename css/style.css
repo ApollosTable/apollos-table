@@ -1062,3 +1062,36 @@ img {
 .text-red { color: var(--red); }
 .text-muted { color: var(--text-muted); }
 .mono { font-family: var(--font-mono); }
+
+/* Channel badges */
+.channel-badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.channel-badge.ebay {
+  background: rgba(62, 207, 110, 0.15);
+  color: var(--green);
+  border: 1px solid rgba(62, 207, 110, 0.3);
+}
+.channel-badge.local {
+  background: rgba(212, 164, 76, 0.12);
+  color: var(--gold-dim);
+  border: 1px solid rgba(212, 164, 76, 0.25);
+}
+
+/* Shippable filter checkbox */
+.filter-group label input[type="checkbox"] {
+  margin-right: 0.4rem;
+  accent-color: var(--gold);
+}
+.filter-group label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}

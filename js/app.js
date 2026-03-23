@@ -226,42 +226,44 @@
   function initFilters(allDeals, container) {
     var gradeFilter = document.getElementById('filter-grade');
     var profitSlider = document.getElementById('filter-profit');
-    var distSlider = document.getElementById('filter-distance');
+    var investSlider = document.getElementById('filter-max-invest');
     var profitVal = document.getElementById('filter-profit-val');
-    var distVal = document.getElementById('filter-distance-val');
+    var investVal = document.getElementById('filter-max-invest-val');
+    var shippableCheck = document.getElementById('filter-shippable');
     var countEl = document.getElementById('filter-count');
 
     if (!gradeFilter) return;
 
-    // Set max values based on data
     var maxProfit = 0;
-    var maxDist = 0;
+    var maxPrice = 0;
     allDeals.forEach(function (d) {
       if ((d.estimated_profit || 0) > maxProfit) maxProfit = d.estimated_profit;
-      if ((d.distance_miles || 0) > maxDist) maxDist = d.distance_miles;
+      if ((d.price || 0) > maxPrice) maxPrice = d.price;
     });
 
     if (profitSlider) {
       profitSlider.max = Math.ceil(maxProfit / 10) * 10 || 500;
       profitSlider.value = 0;
     }
-    if (distSlider) {
-      distSlider.max = Math.ceil(maxDist / 5) * 5 || 100;
-      distSlider.value = distSlider.max;
+    if (investSlider) {
+      investSlider.max = Math.max(Math.ceil(maxPrice / 5) * 5, 100);
+      investSlider.value = investSlider.max;
     }
 
     function applyFilters() {
       var grade = gradeFilter ? gradeFilter.value : 'all';
       var minProfit = profitSlider ? Number(profitSlider.value) : 0;
-      var maxDistance = distSlider ? Number(distSlider.value) : 999;
+      var maxInvest = investSlider ? Number(investSlider.value) : 9999;
+      var shippableOnly = shippableCheck ? shippableCheck.checked : false;
 
       if (profitVal) profitVal.textContent = currency(minProfit);
-      if (distVal) distVal.textContent = maxDistance + ' mi';
+      if (investVal) investVal.textContent = currency(maxInvest);
 
       var filtered = allDeals.filter(function (d) {
         if (grade !== 'all' && (d.grade || '').toUpperCase() !== grade.toUpperCase()) return false;
         if ((d.estimated_profit || 0) < minProfit) return false;
-        if ((d.distance_miles || Infinity) > maxDistance) return false;
+        if ((d.price || 0) > maxInvest) return false;
+        if (shippableOnly && (d.sell_channel || '').toLowerCase() !== 'ebay') return false;
         return true;
       });
 
@@ -271,11 +273,11 @@
 
     if (gradeFilter) gradeFilter.addEventListener('change', applyFilters);
     if (profitSlider) profitSlider.addEventListener('input', applyFilters);
-    if (distSlider) distSlider.addEventListener('input', applyFilters);
+    if (investSlider) investSlider.addEventListener('input', applyFilters);
+    if (shippableCheck) shippableCheck.addEventListener('change', applyFilters);
 
-    // Initial filter display
     if (profitVal) profitVal.textContent = currency(0);
-    if (distVal) distVal.textContent = (distSlider ? distSlider.max : '100') + ' mi';
+    if (investVal) investVal.textContent = currency(investSlider ? Number(investSlider.max) : 100);
     if (countEl) countEl.textContent = allDeals.length + ' deal' + (allDeals.length !== 1 ? 's' : '');
   }
 
@@ -292,25 +294,33 @@
     var html = '';
     deals.forEach(function (d) {
       var gc = gradeClass(d.grade);
+      var displayName = d.item_type || d.location || d.title || 'Untitled';
       var imageHtml = d.image_url
-        ? '<img class="deal-image" src="' + escapeHtml(d.image_url) + '" alt="' + escapeHtml(d.title || '') + '" loading="lazy" onerror="this.outerHTML=\'<div class=deal-image-placeholder>No image</div>\'">'
+        ? '<img class="deal-image" src="' + escapeHtml(d.image_url) + '" alt="' + escapeHtml(displayName) + '" loading="lazy" onerror="this.outerHTML=\'<div class=deal-image-placeholder>No image</div>\'">'
         : '<div class="deal-image-placeholder">No image</div>';
+
+      var channelBadge = (d.sell_channel || '').toLowerCase() === 'ebay'
+        ? '<span class="channel-badge ebay">eBay</span>'
+        : '<span class="channel-badge local">Local</span>';
+
+      var askLabel = (d.price || 0) === 0 ? 'FREE' : currency(d.price);
+      var roi = (d.price || 0) > 0 ? Math.round((d.estimated_profit || 0) / d.price * 100) + '%' : '--';
 
       html += '<div class="deal-card ' + gc + '">' +
         imageHtml +
         '<div class="deal-body">' +
           '<div class="deal-header">' +
-            '<div class="deal-title">' + escapeHtml(d.title || 'Untitled') + '</div>' +
+            '<div class="deal-title">' + escapeHtml(displayName) + '</div>' +
             '<span class="deal-grade ' + gc + '">' + escapeHtml((d.grade || '?').toUpperCase()) + '</span>' +
           '</div>' +
           '<div class="deal-metrics">' +
             '<div class="deal-metric"><span class="metric-label">Est. Profit</span><span class="metric-value profit">' + currency(d.estimated_profit) + '</span></div>' +
-            '<div class="deal-metric"><span class="metric-label">Ask Price</span><span class="metric-value price">' + currency(d.price) + '</span></div>' +
+            '<div class="deal-metric"><span class="metric-label">Ask Price</span><span class="metric-value price">' + askLabel + '</span></div>' +
             '<div class="deal-metric"><span class="metric-label">eBay Median</span><span class="metric-value">' + currency(d.ebay_median) + '</span></div>' +
-            '<div class="deal-metric"><span class="metric-label">Distance</span><span class="metric-value">' + formatDistance(d.distance_miles) + '</span></div>' +
+            '<div class="deal-metric"><span class="metric-label">ROI</span><span class="metric-value">' + roi + '</span></div>' +
           '</div>' +
           '<div class="deal-footer">' +
-            '<span class="deal-location">' + escapeHtml(d.location || 'Unknown') + '</span>' +
+            channelBadge +
             '<span class="deal-time">' + relativeTime(d.posted_at || d.scanned_at) + '</span>' +
           '</div>' +
           (d.url ? '<a class="deal-link" href="' + escapeHtml(d.url) + '" target="_blank" rel="noopener">View listing &rarr;</a>' : '') +
