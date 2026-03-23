@@ -350,18 +350,45 @@
     applyFilters();
   }
 
+  // ---- Dismissed deals (per user) ----
+  var DISMISSED_KEY = 'apollo_dismissed';
+
+  function getDismissed() {
+    try { return JSON.parse(localStorage.getItem(DISMISSED_KEY)) || []; } catch { return []; }
+  }
+
+  function dismissDeal(id) {
+    var list = getDismissed();
+    if (list.indexOf(id) === -1) list.push(id);
+    localStorage.setItem(DISMISSED_KEY, JSON.stringify(list));
+  }
+
+  function undismissAll() {
+    localStorage.removeItem(DISMISSED_KEY);
+    if (window._apolloRefilter) window._apolloRefilter();
+  }
+
   function renderDeals(deals, container) {
-    if (deals.length === 0) {
+    var dismissed = getDismissed();
+    var visible = deals.filter(function (d) { return dismissed.indexOf(d.id) === -1; });
+    var hiddenCount = deals.length - visible.length;
+
+    if (visible.length === 0) {
       container.innerHTML = '<div class="empty-state">' +
         '<div class="empty-icon">&#9898;</div>' +
         '<h3>No deals match your filters</h3>' +
         '<p>Try widening your search criteria</p>' +
+        (hiddenCount > 0 ? '<button class="btn-undismiss" onclick="window._undismissAll()">Show ' + hiddenCount + ' hidden deal' + (hiddenCount !== 1 ? 's' : '') + '</button>' : '') +
         '</div>';
       return;
     }
 
     var html = '';
-    deals.forEach(function (d) {
+    if (hiddenCount > 0) {
+      html += '<div class="dismissed-bar"><span>' + hiddenCount + ' deal' + (hiddenCount !== 1 ? 's' : '') + ' hidden</span><button class="btn-undismiss-small" onclick="window._undismissAll()">Show all</button></div>';
+    }
+
+    visible.forEach(function (d) {
       var gc = gradeClass(d.grade);
       var displayName = d.item_type || d.location || d.title || 'Untitled';
       var imageHtml = d.image_url
@@ -375,7 +402,8 @@
       var askLabel = (d.price || 0) === 0 ? 'FREE' : currency(d.price);
       var roi = (d.price || 0) > 0 ? Math.round((d.estimated_profit || 0) / d.price * 100) + '%' : '--';
 
-      html += '<div class="deal-card ' + gc + '">' +
+      html += '<div class="deal-card ' + gc + '" data-deal-id="' + d.id + '">' +
+        '<button class="deal-dismiss" title="Hide this deal">&times;</button>' +
         imageHtml +
         '<div class="deal-body">' +
           '<div class="deal-header">' +
@@ -398,7 +426,25 @@
     });
 
     container.innerHTML = html;
+
+    // Attach dismiss handlers
+    container.querySelectorAll('.deal-dismiss').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        var card = btn.closest('.deal-card');
+        var dealId = Number(card.getAttribute('data-deal-id'));
+        card.style.transition = 'opacity 0.3s, transform 0.3s';
+        card.style.opacity = '0';
+        card.style.transform = 'scale(0.95)';
+        setTimeout(function () {
+          dismissDeal(dealId);
+          if (window._apolloRefilter) window._apolloRefilter();
+        }, 300);
+      });
+    });
   }
+
+  window._undismissAll = undismissAll;
 
   function renderEmpty(container) {
     container.innerHTML = '<div class="empty-state">' +

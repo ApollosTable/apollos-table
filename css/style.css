@@ -391,6 +391,58 @@ img {
   overflow: hidden;
   transition: border-color var(--transition), transform var(--transition);
   cursor: default;
+  position: relative;
+}
+.deal-dismiss {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  width: 28px;
+  height: 28px;
+  background: rgba(0,0,0,0.7);
+  color: #aaa;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.deal-card:hover .deal-dismiss {
+  opacity: 1;
+}
+.deal-dismiss:hover {
+  background: rgba(200,50,50,0.8);
+  color: #fff;
+}
+.dismissed-bar {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.8rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.btn-undismiss,
+.btn-undismiss-small {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--gold-dim);
+  padding: 0.3rem 0.7rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+.btn-undismiss:hover,
+.btn-undismiss-small:hover {
+  border-color: var(--gold);
+  color: var(--gold);
 }
 
 .deal-card:hover {
